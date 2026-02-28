@@ -256,7 +256,7 @@ const App = () => {
   const [language, setLanguage] = useState(() => getDetectedLanguage()); // 'zh' | 'zhCN' | 'en' | 'es'
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [salaryType, setSalaryType] = useState('hourly'); // 'hourly', 'monthly', 'yearly'
-  const [salaryValue, setSalaryValue] = useState(180);
+  const [salaryValue, setSalaryValue] = useState(0);
 
   const [itemName, setItemName] = useState(() => i18n[getDetectedLanguage()].defaultItemName);
   const [itemPrice, setItemPrice] = useState(0);
@@ -380,17 +380,17 @@ const App = () => {
       footer: 'text-[#7A6E65]'
     },
     minimal: {
-      bg: 'bg-[#FAFAFA]',
-      card: 'bg-white border border-neutral-200/90 shadow-card hover:shadow-card-hover transition-shadow duration-300',
-      textPrimary: 'text-neutral-900',
-      textSecondary: 'text-neutral-500',
-      accent: 'bg-neutral-900 text-white shadow-cta hover:bg-neutral-800 hover:shadow-cta-hover hover:-translate-y-0.5',
-      input: 'border-neutral-300 focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10',
-      divider: 'border-neutral-200',
-      resultCard: 'bg-white border border-neutral-200 shadow-card',
-      resultHighlight: 'text-neutral-900',
-      badge: 'bg-neutral-100 text-neutral-700',
-      footer: 'text-neutral-600'
+      bg: 'bg-gradient-to-b from-[#1f1f1f] to-[#171717]',
+      card: 'bg-[#2e2e2e] border border-neutral-600/50 shadow-card hover:shadow-card-hover transition-shadow duration-300',
+      textPrimary: 'text-neutral-100',
+      textSecondary: 'text-neutral-400',
+      accent: 'bg-neutral-100 text-neutral-900 shadow-cta hover:bg-white hover:shadow-cta-hover hover:-translate-y-0.5',
+      input: 'border-neutral-600 focus:border-neutral-500 focus:ring-2 focus:ring-neutral-500/25',
+      divider: 'border-neutral-600',
+      resultCard: 'bg-[#2e2e2e] border border-neutral-600/50 shadow-card',
+      resultHighlight: 'text-neutral-100',
+      badge: 'bg-neutral-600/40 text-neutral-200',
+      footer: 'text-neutral-500'
     }
   }[theme];
 
@@ -549,7 +549,7 @@ const App = () => {
       {/* Header */}
       <header className="max-w-md mx-auto flex justify-between items-center mb-8 sm:mb-10">
         <div className="flex items-center gap-3">
-          <div className={`flex items-center justify-center overflow-hidden rounded-2xl w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 ${theme === 'latte' ? 'bg-white/80 shadow-card-latte' : 'bg-white shadow-card'}`}>
+          <div className={`flex items-center justify-center overflow-hidden rounded-2xl w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 ${theme === 'latte' ? 'bg-white/80 shadow-card-latte' : 'bg-[#2e2e2e] border border-neutral-600/50 shadow-card'}`}>
             <img
               src={theme === 'minimal' ? '/logo-black.png' : '/logo-latte.png'}
               alt="BuyCalc"
@@ -563,7 +563,7 @@ const App = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setTheme(theme === 'latte' ? 'minimal' : 'latte')}
-            className={`flex-shrink-0 whitespace-nowrap px-4 py-2 rounded-full text-xs font-medium border transition-all duration-200 ${styles.divider} ${theme === 'latte' ? 'bg-white/60 hover:bg-white/80 shadow-sm' : 'bg-white hover:bg-neutral-50 shadow-sm'}`}
+            className={`flex-shrink-0 whitespace-nowrap px-4 py-2 rounded-full text-xs font-medium border transition-all duration-200 ${styles.divider} ${theme === 'latte' ? 'bg-white/60 hover:bg-white/80 shadow-sm' : 'bg-[#2e2e2e] hover:bg-neutral-600 shadow-sm'}`}
           >
             {theme === 'latte' ? t.themeSwitchToMinimal : t.themeSwitchToLatte}
           </button>
@@ -571,38 +571,38 @@ const App = () => {
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); setLangMenuOpen((o) => !o); }}
-              className={`p-2 rounded-full border transition-all duration-200 ${styles.divider} ${theme === 'latte' ? 'bg-white/60 hover:bg-white/80 shadow-sm' : 'bg-white hover:bg-neutral-50 shadow-sm'}`}
+              className={`p-2 rounded-full border transition-all duration-200 ${styles.divider} ${theme === 'latte' ? 'bg-white/60 hover:bg-white/80 shadow-sm' : 'bg-[#2e2e2e] hover:bg-neutral-600 shadow-sm'}`}
               aria-label="Language"
             >
               <IconGear className="w-4 h-4" />
             </button>
             {langMenuOpen && (
-              <div className={`absolute right-0 top-full mt-1.5 py-1 rounded-xl border shadow-lg min-w-[8rem] z-10 ${theme === 'latte' ? 'bg-white/95 border-[#E8E0D8]' : 'bg-white border-neutral-200'}`}>
+              <div className={`absolute right-0 top-full mt-1.5 py-1 rounded-xl border shadow-lg min-w-[8rem] z-10 ${theme === 'latte' ? 'bg-white/95 border-[#E8E0D8]' : 'bg-[#2e2e2e] border-neutral-600'}`}>
                 <button
                   type="button"
                   onClick={() => { setLanguage('zh'); setLangMenuOpen(false); }}
-                  className={`w-full px-4 py-2 text-left text-sm ${language === 'zh' ? 'font-medium opacity-100' : 'opacity-70'} hover:opacity-100 ${theme === 'latte' ? 'hover:bg-[#F5F0E9]' : 'hover:bg-neutral-50'}`}
+                  className={`w-full px-4 py-2 text-left text-sm ${language === 'zh' ? 'font-medium opacity-100' : 'opacity-70'} hover:opacity-100 ${theme === 'latte' ? 'hover:bg-[#F5F0E9]' : 'hover:bg-neutral-600'}`}
                 >
                   {t.langZh}
                 </button>
                 <button
                   type="button"
                   onClick={() => { setLanguage('zhCN'); setLangMenuOpen(false); }}
-                  className={`w-full px-4 py-2 text-left text-sm ${language === 'zhCN' ? 'font-medium opacity-100' : 'opacity-70'} hover:opacity-100 ${theme === 'latte' ? 'hover:bg-[#F5F0E9]' : 'hover:bg-neutral-50'}`}
+                  className={`w-full px-4 py-2 text-left text-sm ${language === 'zhCN' ? 'font-medium opacity-100' : 'opacity-70'} hover:opacity-100 ${theme === 'latte' ? 'hover:bg-[#F5F0E9]' : 'hover:bg-neutral-600'}`}
                 >
                   {t.langZhCN}
                 </button>
                 <button
                   type="button"
                   onClick={() => { setLanguage('en'); setLangMenuOpen(false); }}
-                  className={`w-full px-4 py-2 text-left text-sm ${language === 'en' ? 'font-medium opacity-100' : 'opacity-70'} hover:opacity-100 ${theme === 'latte' ? 'hover:bg-[#F5F0E9]' : 'hover:bg-neutral-50'}`}
+                  className={`w-full px-4 py-2 text-left text-sm ${language === 'en' ? 'font-medium opacity-100' : 'opacity-70'} hover:opacity-100 ${theme === 'latte' ? 'hover:bg-[#F5F0E9]' : 'hover:bg-neutral-600'}`}
                 >
                   {t.langEn}
                 </button>
                 <button
                   type="button"
                   onClick={() => { setLanguage('es'); setLangMenuOpen(false); }}
-                  className={`w-full px-4 py-2 text-left text-sm ${language === 'es' ? 'font-medium opacity-100' : 'opacity-70'} hover:opacity-100 ${theme === 'latte' ? 'hover:bg-[#F5F0E9]' : 'hover:bg-neutral-50'}`}
+                  className={`w-full px-4 py-2 text-left text-sm ${language === 'es' ? 'font-medium opacity-100' : 'opacity-70'} hover:opacity-100 ${theme === 'latte' ? 'hover:bg-[#F5F0E9]' : 'hover:bg-neutral-600'}`}
                 >
                   {t.langEs}
                 </button>
@@ -789,14 +789,14 @@ const App = () => {
       {/* 廣告插頁 Modal：分享圖下載前顯示 */}
       {showAdModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className={`w-full max-w-md rounded-3xl overflow-hidden ${theme === 'latte' ? 'bg-white' : 'bg-white'} shadow-2xl`}>
-            <div className="p-4 border-b border-neutral-200 flex justify-between items-center">
-              <span className="text-sm font-medium opacity-80">{t.adDownloadSoon}</span>
-              <span className={`text-lg font-bold tabular-nums ${theme === 'latte' ? 'text-[#6B5D54]' : 'text-neutral-900'}`}>
+          <div className={`w-full max-w-md rounded-3xl overflow-hidden ${theme === 'latte' ? 'bg-white' : 'bg-[#2e2e2e]'} shadow-2xl`}>
+            <div className={`p-4 border-b flex justify-between items-center ${theme === 'latte' ? 'border-neutral-200' : 'border-neutral-500'}`}>
+              <span className={`text-sm font-medium opacity-80 ${theme === 'minimal' ? 'text-neutral-300' : ''}`}>{t.adDownloadSoon}</span>
+              <span className={`text-lg font-bold tabular-nums ${theme === 'latte' ? 'text-[#6B5D54]' : 'text-neutral-100'}`}>
                 {t.adCountdown.replace('{{n}}', String(adCountdown))}
               </span>
             </div>
-            <div className="aspect-video bg-neutral-100 flex items-center justify-center text-neutral-400 text-sm">
+            <div className={`aspect-video flex items-center justify-center text-sm ${theme === 'latte' ? 'bg-neutral-100 text-neutral-400' : 'bg-neutral-800 text-neutral-500'}`}>
               {/* 廣告版位：之後可替換成 AdMob / 自訂影片或橫幅 */}
               廣告播放中…
             </div>
@@ -808,7 +808,7 @@ const App = () => {
                   setPendingShareType(null);
                   pendingShareRef.current = null;
                 }}
-                className="px-6 py-2 rounded-xl border border-neutral-300 text-neutral-600 text-sm hover:bg-neutral-50"
+                className={`px-6 py-2 rounded-xl border text-sm ${theme === 'latte' ? 'border-neutral-300 text-neutral-600 hover:bg-neutral-50' : 'border-neutral-500 text-neutral-400 hover:bg-neutral-600'}`}
               >
                 {t.adCancel}
               </button>
