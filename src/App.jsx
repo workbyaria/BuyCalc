@@ -544,10 +544,10 @@ const App = () => {
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 font-sans p-5 sm:p-6 ${styles.bg} ${styles.textPrimary}`}>
+    <div className={`min-h-screen transition-colors duration-500 font-sans p-5 sm:p-6 ${styles.bg} bg-fixed ${styles.textPrimary}`}>
 
-      {/* Header */}
-      <header className="max-w-md mx-auto flex justify-between items-center mb-8 sm:mb-10">
+      {/* Header：固定於頂部，寬度與內容區一致 */}
+      <header className={`sticky top-0 z-20 max-w-md mx-auto flex justify-between items-center py-4 mb-4 sm:mb-6 ${theme === 'latte' ? 'bg-[#F8F4EF]' : 'bg-[#1f1f1f]'}`}>
         <div className="flex items-center gap-3">
           <div className={`flex items-center justify-center overflow-hidden rounded-2xl w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 ${theme === 'latte' ? 'bg-white/80 shadow-card-latte' : 'bg-[#2e2e2e] border border-neutral-600/50 shadow-card'}`}>
             <img
