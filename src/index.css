@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased;
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  }
+}
+
+/* 輸入框 focus 時 subtle 背景 */
+input:focus {
+  @apply outline-none;
+}
+
+/* 數字顯示輕微呼吸感（可選） */
+@keyframes subtle-pulse {
+  50% { opacity: 1; }
+  100% { opacity: 0.92; }
+}
