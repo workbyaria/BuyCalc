@@ -764,8 +764,8 @@ const App = () => {
       <canvas ref={canvasRef} className="hidden" />
 
       {/* Footer Text + Social Icons */}
-      <footer className={`text-center pb-10 text-[10px] uppercase tracking-widest ${styles.footer}`}>
-        <p>BuyCalc © {new Date().getFullYear()} · {t.footer}</p>
+      <footer className={`text-center pb-10 text-[10px] tracking-widest ${styles.footer}`}>
+        <p>BuyCalc © {new Date().getFullYear()} · <a href="http://www.friendlycatgroup.com/" target="_blank" rel="noopener noreferrer" className="underline">{t.footer}</a></p>
         <div className="flex justify-center gap-4 mt-3">
           <a
             href="https://instagram.com/friendlycatgroup"
