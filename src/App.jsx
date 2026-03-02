@@ -3,8 +3,8 @@ import React, { useState, useRef, useEffect } from 'react';
 // --- i18n ---
 const i18n = {
   zh: {
-    themeSwitchToMinimal: '切換黑白',
-    themeSwitchToLatte: '切換奶茶',
+    themeSwitchToMinimal: '深色模式',
+    themeSwitchToLatte: '淺色模式',
     salaryLabel: '薪資設定',
     hourly: '時薪',
     monthly: '月薪',
@@ -49,7 +49,7 @@ const i18n = {
   },
   en: {
     themeSwitchToMinimal: 'Dark',
-    themeSwitchToLatte: 'Latte',
+    themeSwitchToLatte: 'Light',
     salaryLabel: 'Salary',
     hourly: 'Hourly',
     monthly: 'Monthly',
@@ -93,8 +93,8 @@ const i18n = {
     resultCardFooter: 'Give yourself 24 hours before you decide',
   },
   zhCN: {
-    themeSwitchToMinimal: '切换黑白',
-    themeSwitchToLatte: '切换奶茶',
+    themeSwitchToMinimal: '深色模式',
+    themeSwitchToLatte: '浅色模式',
     salaryLabel: '薪资设定',
     hourly: '时薪',
     monthly: '月薪',
@@ -139,7 +139,7 @@ const i18n = {
   },
   es: {
     themeSwitchToMinimal: 'Oscuro',
-    themeSwitchToLatte: 'Latte',
+    themeSwitchToLatte: 'Light',
     salaryLabel: 'Salario',
     hourly: 'Por hora',
     monthly: 'Mensual',
