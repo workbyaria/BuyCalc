@@ -8,6 +8,16 @@ import { formatMoney } from './utils/money.js';
 import { hoursFromPrice, budgetSnapshot, flexibleBudget, workDaysFromHours } from './utils/budget.js';
 
 const STORAGE_KEY = 'buycalc_state_v2';
+
+/** 舊版預設商品名；載入或切換語言時改為空字串 */
+const LEGACY_DEFAULT_ITEM_NAMES = ['某個心動的東西', 'Something you want', '某个心动的东西', 'Algo que deseas'];
+
+function normalizeStoredItemName(stored) {
+  const n = stored?.itemName;
+  if (n == null) return '';
+  if (LEGACY_DEFAULT_ITEM_NAMES.includes(n)) return '';
+  return n;
+}
 const STANDARD_HOURS_PER_YEAR = 2080;
 const AD_DURATION_SEC = 15;
 
@@ -95,7 +105,7 @@ const App = () => {
   const [frequency, setFrequency] = useState(initial?.frequency ?? 'daily');
   const [rating, setRating] = useState(initial?.rating ?? 3);
 
-  const [itemName, setItemName] = useState(() => initial?.itemName ?? i18n[getDetectedLanguage()].defaultItemName);
+  const [itemName, setItemName] = useState(() => normalizeStoredItemName(initial));
   const [itemPrice, setItemPrice] = useState(initial?.itemPrice ?? 0);
 
   const [showResult, setShowResult] = useState(false);
@@ -153,7 +163,7 @@ const App = () => {
   ]);
 
   useEffect(() => {
-    const defaults = [i18n.zh.defaultItemName, i18n.en.defaultItemName, i18n.zhCN.defaultItemName, i18n.es.defaultItemName];
+    const defaults = [...new Set([...LEGACY_DEFAULT_ITEM_NAMES, i18n.zh.defaultItemName, i18n.en.defaultItemName, i18n.zhCN.defaultItemName, i18n.es.defaultItemName])];
     if (defaults.includes(itemName)) {
       setItemName(i18n[language].defaultItemName);
       return;

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import GlassCard from '../components/GlassCard.jsx';
 import TopHeader from '../components/TopHeader.jsx';
-import { APP_VERSION } from '../i18n.js';
 
 /** 必須在模組層定義，避免父層每次 render 建立新元件型別導致 input 被卸載、焦點跳掉 */
 function IncomeRowEdit({ field, label, amount, onChange, editing, setEditing, formatMoney, currency, language, t }) {
@@ -110,30 +109,26 @@ export default function ProfileScreen({
           {t.preferences}
         </div>
         <GlassCard className="divide-y divide-[var(--glass-border)] p-0">
-          <div className="flex flex-wrap items-start justify-between gap-3 px-4 py-4">
-            <div className="min-w-0">
-              <div className="text-sm font-semibold text-[var(--color-text)]">{t.currency}</div>
-              <div className="text-xs text-[var(--color-subtext)]">{t.currencyHint}</div>
-            </div>
-            <div className="flex flex-col items-end gap-2">
-              <span className="text-xs font-semibold text-[var(--color-text)]">{currencyLabel}</span>
-              <div className="flex flex-wrap justify-end gap-1.5">
-                {['USD', 'TWD', 'EUR'].map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    onClick={() => onCurrency(c)}
-                    className={
-                      'rounded-full px-3 py-1.5 text-xs font-semibold border transition-colors ' +
-                      (currency === c
-                        ? 'border-[var(--btn-primary-border)] bg-[var(--pill-active)] text-[var(--color-text)]'
-                        : 'border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--color-subtext)]')
-                    }
-                  >
-                    {c}
-                  </button>
-                ))}
-              </div>
+          <div className="px-4 py-4">
+            <div className="text-sm font-semibold text-[var(--color-text)]">{t.currency}</div>
+            <p className="mt-1 text-xs leading-relaxed text-[var(--color-subtext)]">{t.currencyHint}</p>
+            <p className="mt-1 text-xs font-semibold tabular-nums text-[var(--color-text)]">{currencyLabel}</p>
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              {['USD', 'TWD', 'EUR'].map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => onCurrency(c)}
+                  className={
+                    'min-w-0 w-full rounded-2xl border py-2.5 text-center text-xs font-semibold transition-colors ' +
+                    (currency === c
+                      ? 'border-[var(--btn-primary-border)] bg-[var(--pill-active)] text-[var(--color-text)]'
+                      : 'border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--color-subtext)]')
+                  }
+                >
+                  {c}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -159,7 +154,7 @@ export default function ProfileScreen({
 
           <div className="px-4 py-4">
             <div className="text-sm font-semibold text-[var(--color-text)]">{t.themeHint}</div>
-            <div className="mt-3 flex flex-wrap gap-3">
+            <div className="mt-3 grid grid-cols-5 gap-1 sm:gap-2">
               {THEMES.map((th) => {
                 const active = visualTheme === th.id;
                 return (
@@ -168,16 +163,18 @@ export default function ProfileScreen({
                     type="button"
                     onClick={() => onVisualTheme(th.id)}
                     className={
-                      'flex flex-col items-center gap-2 rounded-2xl border p-2 transition-colors ' +
+                      'flex min-h-0 min-w-0 w-full flex-col items-center gap-1 rounded-xl border p-1 transition-colors sm:gap-1.5 sm:rounded-2xl sm:p-1.5 ' +
                       (active ? 'border-[var(--btn-primary-border)] bg-[var(--pill-active)]' : 'border-transparent bg-transparent')
                     }
                     aria-pressed={active}
                   >
                     <span
-                      className="h-10 w-10 rounded-xl border border-black/10 shadow-inner"
+                      className="h-7 w-7 shrink-0 rounded-md border border-black/10 shadow-inner sm:h-9 sm:w-9 sm:rounded-lg"
                       style={{ background: th.swatch }}
                     />
-                    <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-subtext)]">{t[th.labelKey]}</span>
+                    <span className="w-full truncate text-center text-[8px] font-semibold leading-tight text-[var(--color-subtext)] sm:text-[10px]">
+                      {t[th.labelKey]}
+                    </span>
                   </button>
                 );
               })}
@@ -192,14 +189,6 @@ export default function ProfileScreen({
           {t.aboutTitle}
         </div>
         <p className="text-sm leading-relaxed text-[var(--color-subtext)]">{t.aboutText}</p>
-        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--color-subtext)]">
-          <span>
-            {t.version} {APP_VERSION}
-          </span>
-          <a href="https://www.friendlycatgroup.com/" target="_blank" rel="noopener noreferrer" className="underline">
-            {t.privacyPolicy}
-          </a>
-        </div>
       </GlassCard>
     </div>
   );
