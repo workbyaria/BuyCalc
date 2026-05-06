@@ -112,10 +112,10 @@
     --glass-border-muted: rgba(255, 255, 255, 0.55);
     --glass-border-dashed: rgba(142, 207, 255, 0.4);
     --glass-shadow: 0 4px 24px rgba(60, 130, 200, 0.08), 0 8px 40px rgba(80, 150, 210, 0.07);
-    /* 主按鈕：淡霧冰藍、muted 高級感（僅按鈕三色） */
-    --btn-primary: #cfe6f4;
-    --btn-primary-border: #bddaeb;
-    --btn-primary-text: #2a4a62;
+    /* 主按鈕：在 muted 基礎上加一點清爽飽和度（僅按鈕三色） */
+    --btn-primary: #c8e5f8;
+    --btn-primary-border: #acd2ea;
+    --btn-primary-text: #214764;
     --input-bg: rgba(255, 255, 255, 0.62);
     --input-border: rgba(255, 255, 255, 0.65);
     --pill-active: rgba(207, 239, 255, 0.85);

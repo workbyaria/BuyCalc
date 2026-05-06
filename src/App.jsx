@@ -19,6 +19,31 @@ function normalizeStoredItemName(stored) {
   if (LEGACY_DEFAULT_ITEM_NAMES.includes(n)) return '';
   return n;
 }
+
+function normalizeStoredHistory(rawHistory) {
+  if (!Array.isArray(rawHistory)) return [];
+  return rawHistory
+    .filter((row) => row && typeof row === 'object')
+    .map((row) => {
+      const id = Number(row.id) || Date.now();
+      const ts = Number(row.ts) || id;
+      const price = Number(row.price) || 0;
+      const workHours =
+        Number(row.workHours) > 0 ? Number(row.workHours) : Number(row.minutes) > 0 ? Number(row.minutes) / 60 : 0;
+      const safeIcon = row.icon === 'coffee' || row.icon === 'bag' || row.icon === 'play' ? row.icon : 'bag';
+      const safeIntent = row.intent === 'buy' || row.intent === 'save_later' ? row.intent : null;
+      return {
+        ...row,
+        id,
+        ts,
+        price,
+        workHours,
+        icon: safeIcon,
+        intent: safeIntent,
+        title: typeof row.title === 'string' ? row.title : '',
+      };
+    });
+}
 const STANDARD_HOURS_PER_YEAR = 2080;
 const AD_DURATION_SEC = 15;
 
@@ -108,7 +133,7 @@ const App = () => {
   const [savingsGoal, setSavingsGoal] = useState(initial?.savingsGoal ?? 1200);
   const [monthlyFixedCosts, setMonthlyFixedCosts] = useState(initial?.monthlyFixedCosts ?? 0);
   const [currency, setCurrency] = useState(initial?.currency ?? 'USD');
-  const [history, setHistory] = useState(Array.isArray(initial?.history) ? initial.history : []);
+  const [history, setHistory] = useState(normalizeStoredHistory(initial?.history));
   const [latestHistoryId, setLatestHistoryId] = useState(initial?.latestHistoryId ?? null);
 
   const [needOrWant, setNeedOrWant] = useState(initial?.needOrWant ?? 'want');

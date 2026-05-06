@@ -28,6 +28,9 @@ function HistoryIcon({ kind }) {
 }
 
 function HistoryRow({ row, t, currency, language, formatMoney, onDeleteHistoryEntry }) {
+  const workHours = row.workHours ?? (Number(row.minutes) > 0 ? row.minutes / 60 : 0);
+  const hoursLabel = formatWorkHoursForLabel(workHours);
+  const hoursTemplate = typeof t.hoursWork === 'string' ? t.hoursWork : '≈ {{n}} hr work';
   return (
     <GlassCard className="flex items-stretch gap-2 p-2.5 sm:gap-3 sm:p-3">
       <div className="flex h-11 w-11 shrink-0 items-center justify-center self-center rounded-2xl bg-[var(--icon-tile)]">
@@ -41,7 +44,7 @@ function HistoryRow({ row, t, currency, language, formatMoney, onDeleteHistoryEn
       </div>
       <div className="flex shrink-0 flex-col items-end justify-center gap-1 self-center text-right">
         <div className="text-sm font-bold tabular-nums text-[var(--color-text)]">{formatMoney(row.price, currency, language)}</div>
-        <div className="text-[11px] tabular-nums text-[var(--color-subtext)]">{t.hoursWork.replace('{{n}}', hoursLabel)}</div>
+        <div className="text-[11px] tabular-nums text-[var(--color-subtext)]">{hoursTemplate.replace('{{n}}', hoursLabel)}</div>
       </div>
       <button
         type="button"
