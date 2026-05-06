@@ -47,3 +47,23 @@ export function workDaysFromHours(totalHours) {
   const h = Number(totalHours) || 0;
   return h / HOURS_PER_WORK_DAY;
 }
+
+/** 歷史列「工時」顯示用（hr），舊資料僅有 minutes 時請先換算 */
+export function formatWorkHoursForLabel(hours) {
+  const x = Number(hours);
+  if (!Number.isFinite(x) || x <= 0) return '0';
+  if (x < 0.01) return x.toFixed(2);
+  if (x < 1) return String(Math.round(x * 100) / 100);
+  if (x < 10) {
+    const r = Math.round(x * 10) / 10;
+    return Number.isInteger(r) ? String(r) : r.toFixed(1);
+  }
+  return String(Math.round(x));
+}
+
+/** 與舊版「至少 1 分鐘」一致：工時下限 1/60 h */
+export function workHoursFromPurchase(price, hourly) {
+  const h = hoursFromPrice(price, hourly);
+  if (h <= 0) return 0;
+  return Math.max(1 / 60, h);
+}

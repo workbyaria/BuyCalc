@@ -3,9 +3,10 @@ import BottomTabBar from './components/BottomTabBar.jsx';
 import CalcScreen from './screens/CalcScreen.jsx';
 import BudgetScreen from './screens/BudgetScreen.jsx';
 import ProfileScreen from './screens/ProfileScreen.jsx';
-import { i18n, getDetectedLanguage, QUICK_CATEGORY_KEYS } from './i18n.js';
+import { i18n, getDetectedLanguage, QUICK_CATEGORY_KEYS, I18N_LANGUAGE_CODES } from './i18n.js';
 import { formatMoney } from './utils/money.js';
-import { hoursFromPrice, budgetSnapshot, flexibleBudget, workDaysFromHours } from './utils/budget.js';
+import { hoursFromPrice, budgetSnapshot, flexibleBudget, workDaysFromHours, workHoursFromPurchase } from './utils/budget.js';
+import { themeIds } from './theme.js';
 
 const STORAGE_KEY = 'buycalc_state_v2';
 
@@ -81,18 +82,26 @@ function formatHistoryWhen(ts, language) {
   }
 }
 
-/** 舊版 localStorage：postal→pink、cloud→ice */
+/** 舊版 localStorage：postal→pink、cloud→ice；無效值回落 latte，避免 CSS 變數未定義造成白屏 */
 function normalizeStoredTheme(theme) {
   if (theme === 'postal') return 'pink';
   if (theme === 'cloud') return 'ice';
-  return theme;
+  const t = theme == null || theme === '' ? null : String(theme);
+  if (t && themeIds.includes(t)) return t;
+  return 'latte';
+}
+
+function normalizeStoredLanguage(code) {
+  const c = code == null || code === '' ? null : String(code);
+  if (c && I18N_LANGUAGE_CODES.includes(c)) return c;
+  return getDetectedLanguage();
 }
 
 const App = () => {
   const initial = loadStored();
   const [tab, setTab] = useState(initial?.tab ?? 'calc');
   const [visualTheme, setVisualTheme] = useState(normalizeStoredTheme(initial?.visualTheme ?? 'latte'));
-  const [language, setLanguage] = useState(initial?.language ?? getDetectedLanguage());
+  const [language, setLanguage] = useState(normalizeStoredLanguage(initial?.language));
 
   const [hourlyWage, setHourlyWage] = useState(initial?.hourlyWage ?? 25);
   const [monthlyTakeHome, setMonthlyTakeHome] = useState(initial?.monthlyTakeHome ?? 5800);
@@ -120,7 +129,7 @@ const App = () => {
   const [adCountdown, setAdCountdown] = useState(0);
   const [pendingShareType, setPendingShareType] = useState(null);
 
-  const t = i18n[language];
+  const t = i18n[language] ?? i18n.zh;
 
   useEffect(() => {
     document.documentElement.dataset.theme = visualTheme;
@@ -257,14 +266,14 @@ const App = () => {
     setBudgetPctLine(line);
     setShowResult(true);
 
-    const minutes = Math.max(1, Math.round((itemPrice / hourlyWage) * 60));
+    const workHours = workHoursFromPurchase(itemPrice, hourlyWage);
     const icons = ['coffee', 'bag', 'play'];
     const icon = icons[Math.floor(Math.random() * icons.length)];
     const title = itemName.trim() || t.defaultItemName;
     const id = Date.now();
     setLatestHistoryId(id);
     setHistory((prev) =>
-      [{ id, title, ts: id, price: itemPrice, minutes, icon, intent: null }, ...prev].slice(0, 50),
+      [{ id, title, ts: id, price: itemPrice, workHours, icon, intent: null }, ...prev].slice(0, 50),
     );
   };
 

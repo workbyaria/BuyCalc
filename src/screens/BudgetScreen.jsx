@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import GlassCard from '../components/GlassCard.jsx';
 import ProgressRing from '../components/ProgressRing.jsx';
 import TopHeader from '../components/TopHeader.jsx';
+import { formatWorkHoursForLabel } from '../utils/budget.js';
 
 function HistoryIcon({ kind }) {
   if (kind === 'coffee')
@@ -40,7 +41,7 @@ function HistoryRow({ row, t, currency, language, formatMoney, onDeleteHistoryEn
       </div>
       <div className="flex shrink-0 flex-col items-end justify-center gap-1 self-center text-right">
         <div className="text-sm font-bold tabular-nums text-[var(--color-text)]">{formatMoney(row.price, currency, language)}</div>
-        <div className="text-[11px] text-[var(--color-subtext)]">{t.minsWork.replace('{{n}}', String(row.minutes))}</div>
+        <div className="text-[11px] tabular-nums text-[var(--color-subtext)]">{t.hoursWork.replace('{{n}}', hoursLabel)}</div>
       </div>
       <button
         type="button"

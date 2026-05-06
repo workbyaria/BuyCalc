@@ -58,7 +58,7 @@ const extra = {
     notificationBell: '通知',
     used: '已使用',
     edit: '編輯',
-    minsWork: '≈ {{n}} 分鐘工時',
+    hoursWork: '約 {{n}} 小時工時',
     coachCalm: '你的彈性預算仍在合理範圍內，保持覺察就很好。',
     coachTight: '本月已用比例偏高，接下來幾天可以溫柔地放慢腳步。',
     comingSoon: '即將推出',
@@ -144,7 +144,7 @@ const extra = {
     notificationBell: 'Notifications',
     used: 'Used',
     edit: 'Edit',
-    minsWork: '≈ {{n}} min work',
+    hoursWork: '≈ {{n}} hr work',
     coachCalm: 'Your flexible budget still looks within a healthy range.',
     coachTight: 'You have used a large share this month — a gentle slowdown can help.',
     comingSoon: 'Coming soon',
@@ -229,7 +229,7 @@ const extra = {
     notificationBell: '通知',
     used: '已使用',
     edit: '编辑',
-    minsWork: '≈ {{n}} 分钟工时',
+    hoursWork: '约 {{n}} 小时工时',
     coachCalm: '你的弹性预算仍在合理范围内，保持觉察就很好。',
     coachTight: '本月已用比例偏高，接下来几天可以温柔地放慢脚步。',
     comingSoon: '即将推出',
@@ -315,7 +315,7 @@ const extra = {
     notificationBell: 'Avisos',
     used: 'Usado',
     edit: 'Editar',
-    minsWork: '≈ {{n}} min trabajo',
+    hoursWork: '≈ {{n}} h trabajo',
     coachCalm: 'Tu presupuesto flexible sigue en un rango razonable.',
     coachTight: 'Has usado mucho este mes — un ritmo más suave ayuda.',
     comingSoon: 'Pronto',
@@ -541,6 +541,9 @@ export const i18n = {
     ...extra.es,
   },
 };
+
+/** App 支援的 language state 值，需與 i18n 頂層 key 一致 */
+export const I18N_LANGUAGE_CODES = ['zh', 'zhCN', 'en', 'es'];
 
 export const getDetectedLanguage = () => {
   if (typeof navigator === 'undefined' || !navigator.languages) return 'zh';
