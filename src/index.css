@@ -150,31 +150,31 @@
     --icon-tile: rgba(115, 115, 115, 0.35);
   }
 
-  /* Pink — muted blush, low saturation */
+  /* Pink — ice-jelly / strawberry milk / Glossier-adjacent（FFEFF6 · FFDCEB · FFCFE4 · FFBDD9 · FFA9CF） */
   :root[data-theme='pink'] {
-    --bg-from: #f4ecee;
-    --bg-to: #e8d9dd;
-    --glow-top-left: rgba(245, 215, 220, 0.62);
-    --glow-bottom-right: rgba(218, 188, 198, 0.48);
-    --glow-center: rgba(235, 205, 212, 0.28);
-    --color-text: #3a3236;
-    --color-subtext: #7a6a70;
-    --glass-bg: rgba(255, 250, 251, 0.58);
-    --glass-bg-muted: rgba(255, 245, 247, 0.42);
-    --glass-border: rgba(255, 255, 255, 0.65);
-    --glass-border-muted: rgba(255, 255, 255, 0.48);
-    --glass-border-dashed: rgba(120, 82, 96, 0.22);
-    --glass-shadow: 0 4px 20px rgba(90, 56, 68, 0.06), 0 8px 32px rgba(90, 56, 68, 0.04);
-    --btn-primary: #8b5a66;
-    --btn-primary-border: #744a55;
+    --bg-from: #ffeff6;
+    --bg-to: #ffdceb;
+    --glow-top-left: rgba(255, 239, 246, 0.92);
+    --glow-bottom-right: rgba(255, 207, 228, 0.55);
+    --glow-center: rgba(255, 220, 235, 0.45);
+    --color-text: #3a2833;
+    --color-subtext: #856077;
+    --glass-bg: rgba(255, 255, 255, 0.62);
+    --glass-bg-muted: rgba(255, 239, 246, 0.48);
+    --glass-border: rgba(255, 255, 255, 0.74);
+    --glass-border-muted: rgba(255, 255, 255, 0.54);
+    --glass-border-dashed: rgba(255, 169, 207, 0.4);
+    --glass-shadow: 0 4px 26px rgba(230, 130, 175, 0.08), 0 8px 40px rgba(210, 110, 160, 0.06);
+    --btn-primary: #f06292;
+    --btn-primary-border: #ec407a;
     --btn-primary-text: #ffffff;
-    --input-bg: rgba(255, 252, 253, 0.58);
-    --input-border: rgba(255, 255, 255, 0.55);
-    --pill-active: rgba(248, 236, 240, 0.95);
-    --tab-active-bg: rgba(255, 250, 252, 0.58);
-    --ring-track: rgba(139, 90, 102, 0.14);
-    --ring-fill: #8b5a66;
-    --icon-tile: rgba(212, 165, 180, 0.42);
+    --input-bg: rgba(255, 255, 255, 0.6);
+    --input-border: rgba(255, 255, 255, 0.62);
+    --pill-active: rgba(255, 236, 244, 0.92);
+    --tab-active-bg: rgba(255, 255, 255, 0.62);
+    --ring-track: rgba(240, 98, 146, 0.2);
+    --ring-fill: #f06292;
+    --icon-tile: rgba(255, 189, 217, 0.52);
   }
 }
 

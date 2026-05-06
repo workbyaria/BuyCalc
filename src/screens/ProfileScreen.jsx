@@ -42,7 +42,7 @@ const THEMES = [
   { id: 'latte', labelKey: 'themeLatte', swatch: '#f3e9dc' },
   { id: 'minimal', labelKey: 'themeMinimal', swatch: '#2a2a2a' },
   { id: 'ice', labelKey: 'themeIce', swatch: '#d8f3ff' },
-  { id: 'pink', labelKey: 'themePink', swatch: '#e8d0d6' },
+  { id: 'pink', labelKey: 'themePink', swatch: '#ffdceb' },
   { id: 'matcha', labelKey: 'themeMatcha', swatch: '#dceee0' },
 ];
 

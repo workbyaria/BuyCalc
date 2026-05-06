@@ -43,10 +43,10 @@ export default function CalcScreen({
         onBell={onBell}
       />
 
-      <div className="text-center">
-        <p className="text-2xl font-light leading-relaxed text-[var(--color-text)]">{t.headerKicker}</p>
-        <h1 className="mt-1.5 text-2xl font-light leading-relaxed text-[var(--color-text)]">{t.headerHeadline}</h1>
-      </div>
+      <header className="mx-auto max-w-[19rem] px-1 text-center">
+        <p className="text-2xl font-light leading-[1.35] tracking-[-0.02em] text-[var(--color-subtext)]">{t.headerKicker}</p>
+        <h1 className="mt-2.5 text-2xl font-medium leading-[1.35] tracking-[-0.03em] text-[var(--color-text)]">{t.headerHeadline}</h1>
+      </header>
 
       <GlassCard className="p-6 sm:p-7 space-y-6">
         <InputField
