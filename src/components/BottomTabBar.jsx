@@ -50,10 +50,10 @@ export default function BottomTabBar({ active, onChange, labels }) {
             type="button"
             onClick={() => onChange(id)}
             className={
-              'flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-semibold uppercase tracking-[0.14em] transition-colors ' +
+              'flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-semibold uppercase tracking-[0.14em] transition-all duration-150 ' +
               (isOn
-                ? 'bg-[var(--tab-active-bg)] text-[var(--color-text)]'
-                : 'text-[var(--color-subtext)] hover:text-[var(--color-text)]')
+                ? 'bg-[var(--tab-active-bg)] text-[var(--color-text)] shadow-[0_1px_6px_rgba(0,0,0,0.07)]'
+                : 'text-[var(--color-subtext)] hover:text-[var(--color-text)] active:scale-[0.95]')
             }
           >
             <Icon />

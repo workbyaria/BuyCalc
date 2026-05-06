@@ -31,7 +31,7 @@ export default function ReflectionSelector({
             type="button"
             onClick={() => onPurchaseIntent('buy')}
             className={
-              'min-w-0 flex-1 rounded-full py-2.5 text-center text-[11px] font-bold uppercase tracking-wide transition-colors ' +
+              'min-w-0 flex-1 rounded-full py-2.5 text-center text-[11px] font-bold uppercase tracking-wide transition-all duration-150 ' +
               (purchaseIntent === 'buy'
                 ? 'bg-[var(--btn-primary)] text-[var(--btn-primary-text)] shadow-sm'
                 : 'text-[var(--color-subtext)] hover:text-[var(--color-text)]')
@@ -43,7 +43,7 @@ export default function ReflectionSelector({
             type="button"
             onClick={() => onPurchaseIntent('save_later')}
             className={
-              'min-w-0 flex-1 rounded-full py-2.5 text-center text-[11px] font-bold uppercase tracking-wide transition-colors ' +
+              'min-w-0 flex-1 rounded-full py-2.5 text-center text-[11px] font-bold uppercase tracking-wide transition-all duration-150 ' +
               (purchaseIntent === 'save_later'
                 ? 'bg-[var(--pill-active)] text-[var(--color-text)] shadow-sm'
                 : 'text-[var(--color-subtext)] hover:text-[var(--color-text)]')
@@ -80,7 +80,7 @@ export default function ReflectionSelector({
                 type="button"
                 onClick={() => onNeedOrWant('want')}
                 className={
-                  'rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide transition-colors ' +
+                  'rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide transition-all duration-150 ' +
                   (needOrWant === 'want'
                     ? 'bg-white text-[var(--color-text)] shadow-sm'
                     : 'text-[var(--color-subtext)]')
@@ -92,7 +92,7 @@ export default function ReflectionSelector({
                 type="button"
                 onClick={() => onNeedOrWant('need')}
                 className={
-                  'rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide transition-colors ' +
+                  'rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide transition-all duration-150 ' +
                   (needOrWant === 'need'
                     ? 'bg-[var(--pill-active)] text-[var(--color-text)] shadow-sm'
                     : 'text-[var(--color-subtext)]')
@@ -112,10 +112,10 @@ export default function ReflectionSelector({
                   type="button"
                   onClick={() => onFrequency(f.id)}
                   className={
-                    'rounded-full px-3 py-1.5 text-xs font-semibold transition-colors border ' +
+                    'rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-150 border ' +
                     (frequency === f.id
                       ? 'border-[var(--btn-primary-border)] bg-[var(--pill-active)] text-[var(--color-text)]'
-                      : 'border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--color-subtext)]')
+                      : 'border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--color-subtext)] hover:text-[var(--color-text)]')
                   }
                 >
                   {f.label}
@@ -138,10 +138,10 @@ export default function ReflectionSelector({
                   aria-pressed={rating === n}
                   onClick={() => onRating(n)}
                   className={
-                    'h-8 w-8 rounded-full border transition-colors sm:h-9 sm:w-9 ' +
+                    'h-8 w-8 rounded-full border transition-all duration-150 active:scale-[0.92] sm:h-9 sm:w-9 ' +
                     (n <= rating
                       ? 'border-[var(--btn-primary-border)] bg-[var(--btn-primary)]'
-                      : 'border-[var(--input-border)] bg-[var(--input-bg)]')
+                      : 'border-[var(--input-border)] bg-[var(--input-bg)] hover:border-[var(--btn-primary-border)]/50')
                   }
                 />
               ))}

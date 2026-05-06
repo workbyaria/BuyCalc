@@ -2,7 +2,7 @@
  * Design tokens — warm glassmorphism (Stitch reference).
  * Runtime theme uses `data-theme` on document.documentElement; see index.css.
  */
-export const themeIds = ['latte', 'minimal', 'cloud', 'pink', 'matcha'];
+export const themeIds = ['latte', 'minimal', 'ice', 'pink', 'matcha'];
 
 export const colors = {
   background: '#F5EFE6',

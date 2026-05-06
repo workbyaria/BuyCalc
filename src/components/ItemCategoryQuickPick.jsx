@@ -97,15 +97,15 @@ export default function ItemCategoryQuickPick({ t, itemName, onPick }) {
               type="button"
               onClick={() => onPick(label)}
               className={
-                'flex aspect-square flex-col items-center justify-center gap-1.5 rounded-2xl border px-1 py-2 text-center transition-colors ' +
+                'flex aspect-square flex-col items-center justify-center gap-1.5 rounded-2xl border px-1 py-2 text-center transition-all duration-150 active:scale-[0.95] ' +
                 (selected
                   ? 'border-[var(--btn-primary-border)] bg-[var(--pill-active)] text-[var(--color-text)] shadow-sm'
-                  : 'border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--color-text)] hover:border-[var(--glass-border)]')
+                  : 'border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--color-text)] hover:border-[var(--glass-border)] hover:bg-[var(--glass-bg)]')
               }
               aria-pressed={selected}
               aria-label={label}
             >
-              <Icon className="h-6 w-6 shrink-0 text-[var(--color-text)] opacity-90" />
+              <Icon className="h-6 w-6 shrink-0 text-[var(--color-text)] opacity-80" />
               <span className="line-clamp-2 w-full px-0.5 text-[9px] font-semibold leading-tight text-[var(--color-text)]">{label}</span>
             </button>
           );

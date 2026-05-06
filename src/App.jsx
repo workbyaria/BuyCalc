@@ -81,9 +81,10 @@ function formatHistoryWhen(ts, language) {
   }
 }
 
-/** 舊版 localStorage 曾使用 postal，改為 pink */
+/** 舊版 localStorage：postal→pink、cloud→ice */
 function normalizeStoredTheme(theme) {
   if (theme === 'postal') return 'pink';
+  if (theme === 'cloud') return 'ice';
   return theme;
 }
 
@@ -497,7 +498,7 @@ const App = () => {
 
         {tab === 'calc' && (
           <>
-            <div className="mt-6 flex h-20 items-center justify-center rounded-[22px] border border-dashed border-[var(--glass-border)] text-xs text-[var(--color-subtext)]">
+            <div className="mt-6 flex h-20 items-center justify-center rounded-[22px] border border-dashed border-[var(--glass-border)] text-xs font-light text-[var(--color-subtext)]">
               {t.adSlot}
             </div>
             <div className="mt-4 flex gap-3 pb-4">
@@ -508,7 +509,7 @@ const App = () => {
                   setPendingShareType('post');
                   setShowAdModal(true);
                 }}
-                className="flex flex-1 items-center justify-center gap-2 rounded-[22px] border border-[var(--btn-primary-border)] bg-[var(--btn-primary)] py-4 text-sm font-semibold text-[var(--btn-primary-text)] shadow-md transition-all active:scale-[0.99]"
+                className="flex flex-1 items-center justify-center gap-2 rounded-[22px] border border-[var(--btn-primary-border)] bg-[var(--btn-primary)] py-4 text-sm font-semibold text-[var(--btn-primary-text)] shadow-md transition-all duration-150 hover:opacity-90 active:scale-[0.98]"
               >
                 <IconShare className="h-5 w-5" />
                 {t.sharePost}
@@ -520,7 +521,7 @@ const App = () => {
                   setPendingShareType('story');
                   setShowAdModal(true);
                 }}
-                className="flex flex-1 items-center justify-center gap-2 rounded-[22px] border border-[var(--btn-primary-border)] bg-[var(--btn-primary)] py-4 text-sm font-semibold text-[var(--btn-primary-text)] shadow-md transition-all active:scale-[0.99]"
+                className="flex flex-1 items-center justify-center gap-2 rounded-[22px] border border-[var(--btn-primary-border)] bg-[var(--btn-primary)] py-4 text-sm font-semibold text-[var(--btn-primary-text)] shadow-md transition-all duration-150 hover:opacity-90 active:scale-[0.98]"
               >
                 <IconShare className="h-5 w-5" />
                 {t.shareStory}
@@ -529,7 +530,7 @@ const App = () => {
           </>
         )}
 
-        <footer className="mt-8 text-center text-[10px] tracking-widest text-[var(--color-subtext)]">
+        <footer className="mt-8 text-center text-[10px] font-light tracking-[0.2em] text-[var(--color-subtext)]">
           <p>
             BuyCalc © {new Date().getFullYear()} ·{' '}
             <a href="http://www.friendlycatgroup.com/" target="_blank" rel="noopener noreferrer" className="underline">

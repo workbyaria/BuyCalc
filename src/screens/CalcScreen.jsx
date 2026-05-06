@@ -35,7 +35,7 @@ export default function CalcScreen({
   const pricePrefix = currency === 'TWD' ? 'NT$' : currency === 'EUR' ? '€' : '$';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <TopHeader
         title="BuyCalc"
         bellAriaLabel={t.notificationBell}
@@ -44,11 +44,11 @@ export default function CalcScreen({
       />
 
       <div className="text-center">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[var(--color-subtext)]">{t.headerKicker}</p>
-        <h1 className="mt-2 text-2xl font-bold leading-tight text-[var(--color-text)]">{t.headerHeadline}</h1>
+        <p className="text-2xl font-light leading-relaxed text-[var(--color-text)]">{t.headerKicker}</p>
+        <h1 className="mt-1.5 text-2xl font-light leading-relaxed text-[var(--color-text)]">{t.headerHeadline}</h1>
       </div>
 
-      <GlassCard className="p-5 sm:p-6 space-y-5">
+      <GlassCard className="p-6 sm:p-7 space-y-6">
         <InputField
           label={t.itemPriceLabel}
           prefix={pricePrefix}
@@ -69,7 +69,7 @@ export default function CalcScreen({
             value={itemName}
             onChange={onItemNameChange}
             placeholder={t.productNamePlaceholder}
-            className="w-full rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-4 py-3 text-sm font-medium text-[var(--color-text)] outline-none placeholder:text-[var(--color-subtext)]/50"
+            className="input-glow w-full rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-4 py-3 text-sm font-medium text-[var(--color-text)] outline-none placeholder:text-[var(--color-subtext)]/50 transition-all duration-150"
           />
           <ItemCategoryQuickPick t={t} itemName={itemName} onPick={onPickCategory} />
         </div>
@@ -80,7 +80,7 @@ export default function CalcScreen({
 
       {showResult && (
         <>
-          <GlassCard className="p-6 sm:p-7 text-center space-y-2">
+          <GlassCard className="p-7 sm:p-8 text-center space-y-2">
             <p className="text-sm text-[var(--color-subtext)]">{t.resultCostsYou}</p>
             <p className="text-2xl sm:text-[1.65rem] font-bold leading-snug text-[var(--color-text)]">
               {t.resultHoursLine.replace('{{n}}', String(resultHours))}
@@ -91,7 +91,7 @@ export default function CalcScreen({
             </div>
           </GlassCard>
 
-          <GlassCard className="p-5 sm:p-6">
+          <GlassCard className="p-6 sm:p-7">
             <ReflectionSelector
               t={t}
               purchaseIntent={purchaseIntent}

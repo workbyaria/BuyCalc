@@ -137,7 +137,7 @@ export default function BudgetScreen({
       </GlassCard>
 
       <div className="grid grid-cols-2 gap-3">
-        <GlassCard className="p-4">
+        <GlassCard className="p-4 sm:p-5">
           <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--color-subtext)]">{t.remaining}</div>
           <div className="mt-1 text-lg font-bold tabular-nums text-[var(--color-text)]">{formatMoney(remaining, currency, language)}</div>
           <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[var(--ring-track)]">
@@ -147,7 +147,7 @@ export default function BudgetScreen({
             />
           </div>
         </GlassCard>
-        <GlassCard className="p-4">
+        <GlassCard className="p-4 sm:p-5">
           <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--color-subtext)]">{t.dailyCap}</div>
           <div className="mt-1 text-lg font-bold tabular-nums text-[var(--color-text)]">{formatMoney(dailyCap, currency, language)}</div>
           <p className="mt-2 text-[11px] text-[var(--color-subtext)]">{t.optimalSpending}</p>

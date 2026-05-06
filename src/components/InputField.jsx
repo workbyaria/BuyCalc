@@ -18,7 +18,7 @@ export default function InputField({
           {label}
         </div>
       )}
-      <div className="flex items-center gap-2 rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-4 py-3">
+      <div className="input-glow flex items-center gap-2 rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-4 py-3 transition-all duration-150">
         {prefix && <span className="text-xl font-semibold text-[var(--color-text)] tabular-nums shrink-0">{prefix}</span>}
         <input
           type="text"

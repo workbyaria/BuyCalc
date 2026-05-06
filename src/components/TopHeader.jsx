@@ -46,7 +46,7 @@ export default function TopHeader({ title, bellAriaLabel, onBell, logoSrc }) {
         <button
           type="button"
           onClick={onBell}
-          className="rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] p-2 text-[var(--color-text)] shadow-sm backdrop-blur-md transition-colors hover:opacity-90"
+          className="rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] p-2 text-[var(--color-text)] shadow-sm backdrop-blur-md transition-all duration-150 hover:opacity-80 active:scale-[0.93]"
           aria-label={bellAriaLabel}
         >
           <IconBell className="h-4 w-4" />

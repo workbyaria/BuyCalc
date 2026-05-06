@@ -41,7 +41,7 @@ function IncomeRowEdit({ field, label, amount, onChange, editing, setEditing, fo
 const THEMES = [
   { id: 'latte', labelKey: 'themeLatte', swatch: '#f3e9dc' },
   { id: 'minimal', labelKey: 'themeMinimal', swatch: '#2a2a2a' },
-  { id: 'cloud', labelKey: 'themeCloud', swatch: '#eef1f5' },
+  { id: 'ice', labelKey: 'themeIce', swatch: '#d8f3ff' },
   { id: 'pink', labelKey: 'themePink', swatch: '#e8d0d6' },
   { id: 'matcha', labelKey: 'themeMatcha', swatch: '#dceee0' },
 ];
@@ -90,7 +90,7 @@ export default function ProfileScreen({
           </span>
           {t.incomeSettings}
         </div>
-        <GlassCard className="p-4 sm:p-5">
+        <GlassCard className="p-5 sm:p-6">
           <IncomeRowEdit {...rowProps} field="hourly" label={t.hourlyWageLabel} amount={hourlyWage} onChange={onHourlyChange} />
           <IncomeRowEdit {...rowProps} field="monthly" label={t.monthlyTakeHome} amount={monthlyTakeHome} onChange={onMonthlyChange} />
           <IncomeRowEdit {...rowProps} field="savings" label={t.savingsGoal} amount={savingsGoal} onChange={onSavingsGoalChange} />
