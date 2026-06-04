@@ -39,11 +39,12 @@ function IncomeRowEdit({ field, label, amount, onChange, editing, setEditing, fo
 }
 
 const THEMES = [
-  { id: 'latte', labelKey: 'themeLatte', swatch: '#f3e9dc' },
+  { id: 'game',    labelKey: 'themeGame',   swatch: '#7ecde8' },
+  { id: 'latte',   labelKey: 'themeLatte',   swatch: '#f3e9dc' },
   { id: 'minimal', labelKey: 'themeMinimal', swatch: '#2a2a2a' },
-  { id: 'ice', labelKey: 'themeIce', swatch: '#d8f3ff' },
-  { id: 'pink', labelKey: 'themePink', swatch: '#ffdceb' },
-  { id: 'matcha', labelKey: 'themeMatcha', swatch: '#dceee0' },
+  { id: 'ice',     labelKey: 'themeIce',     swatch: '#d8f3ff' },
+  { id: 'pink',    labelKey: 'themePink',    swatch: '#ffdceb' },
+  { id: 'matcha',  labelKey: 'themeMatcha',  swatch: '#dceee0' },
 ];
 
 export default function ProfileScreen({
@@ -154,7 +155,7 @@ export default function ProfileScreen({
 
           <div className="px-4 py-4">
             <div className="text-sm font-semibold text-[var(--color-text)]">{t.themeHint}</div>
-            <div className="mt-3 grid grid-cols-5 gap-1 sm:gap-2">
+            <div className="mt-3 grid grid-cols-3 gap-2">
               {THEMES.map((th) => {
                 const active = visualTheme === th.id;
                 return (

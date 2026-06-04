@@ -1,8 +1,43 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import GlassCard from '../components/GlassCard.jsx';
 import ProgressRing from '../components/ProgressRing.jsx';
 import TopHeader from '../components/TopHeader.jsx';
 import { formatWorkHoursForLabel } from '../utils/budget.js';
+
+function WaterDropCounter({ waterDrops }) {
+  const prevRef = useRef(waterDrops);
+  const [animClass, setAnimClass] = useState('');
+
+  useEffect(() => {
+    const mounted = prevRef.current !== undefined;
+    if (mounted && waterDrops > prevRef.current) {
+      setAnimClass('water-drop-bounce');
+      const t = setTimeout(() => setAnimClass(''), 450);
+      prevRef.current = waterDrops;
+      return () => clearTimeout(t);
+    }
+    prevRef.current = waterDrops;
+  }, [waterDrops]);
+
+  return (
+    <span
+      className={`flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-bold tabular-nums ${animClass}`}
+      style={{
+        background: 'rgba(93, 168, 232, 0.12)',
+        borderColor: 'rgba(93, 168, 232, 0.32)',
+        color: 'var(--color-text)',
+      }}
+    >
+      <svg viewBox="0 0 16 20" width={10} height={13} aria-hidden="true">
+        <path
+          d="M8 1 C8 1,1.5 9.5,1.5 13.5 C1.5 17,4.4 19,8 19 C11.6 19,14.5 17,14.5 13.5 C14.5 9.5,8 1,8 1Z"
+          fill="#5da8e8"
+        />
+      </svg>
+      {waterDrops}
+    </span>
+  );
+}
 
 function HistoryIcon({ kind }) {
   if (kind === 'coffee')
@@ -77,6 +112,7 @@ export default function BudgetScreen({
   history,
   onDeleteHistoryEntry,
   onBell,
+  waterDrops = 0,
 }) {
   const [historyTab, setHistoryTab] = useState('spent');
 
@@ -99,9 +135,12 @@ export default function BudgetScreen({
         onBell={onBell}
       />
 
-      <div>
-        <h1 className="text-2xl font-bold text-[var(--color-text)]">{t.budgetTitle}</h1>
-        <p className="mt-1 text-sm text-[var(--color-subtext)]">{t.budgetSubtitle}</p>
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">{t.budgetTitle}</h1>
+          <p className="mt-1 text-sm text-[var(--color-subtext)]">{t.budgetSubtitle}</p>
+        </div>
+        <WaterDropCounter waterDrops={waterDrops} />
       </div>
 
       <GlassCard className="p-5 sm:p-6">
@@ -130,7 +169,7 @@ export default function BudgetScreen({
           </div>
         </div>
 
-        <div className="mt-6 flex justify-center">
+        <div className="mt-4 flex justify-center">
           <ProgressRing percent={pctUsed} label={pctLabel} sublabel={t.used} />
         </div>
 

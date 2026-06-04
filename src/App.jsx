@@ -3,6 +3,7 @@ import BottomTabBar from './components/BottomTabBar.jsx';
 import CalcScreen from './screens/CalcScreen.jsx';
 import BudgetScreen from './screens/BudgetScreen.jsx';
 import ProfileScreen from './screens/ProfileScreen.jsx';
+import IslandScreen from './screens/IslandScreen.jsx';
 import { i18n, getDetectedLanguage, QUICK_CATEGORY_KEYS, I18N_LANGUAGE_CODES } from './i18n.js';
 import { formatMoney } from './utils/money.js';
 import { hoursFromPrice, budgetSnapshot, flexibleBudget, workDaysFromHours, workHoursFromPurchase } from './utils/budget.js';
@@ -48,8 +49,8 @@ const STANDARD_HOURS_PER_YEAR = 2080;
 const AD_DURATION_SEC = 15;
 
 const defaultState = () => ({
-  tab: 'calc',
-  visualTheme: 'latte',
+  tab: 'island',
+  visualTheme: 'game',
   hourlyWage: 25,
   monthlyTakeHome: 5800,
   savingsGoal: 1200,
@@ -62,7 +63,32 @@ const defaultState = () => ({
   rating: 3,
   itemName: '',
   itemPrice: 0,
+  waterDrops: 0,
 });
+
+function GameCloud({ style, width, opacity, drift, duration, delay }) {
+  return (
+    <div
+      className="absolute"
+      style={{ ...style, width, opacity, animation: `${drift} ${duration} ease-in-out infinite ${delay}` }}
+    >
+      <svg viewBox="0 0 140 52" fill="white" style={{ width: '100%', display: 'block' }}>
+        <path d="M10,48 Q5,48 5,40 Q5,27 17,25 Q15,11 29,9 Q39,2 53,8 Q63,1 77,8 Q91,2 103,14 Q119,11 126,25 Q137,27 137,40 Q137,48 128,48 Z" />
+      </svg>
+    </div>
+  );
+}
+
+function GameClouds() {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+      <GameCloud style={{ top: '4%',    left: '-4%'   }} width={200} opacity={0.82} drift="cloud-drift"   duration="10s" delay="0s"  />
+      <GameCloud style={{ top: '17%',   right: '-3%'  }} width={160} opacity={0.75} drift="cloud-drift-r" duration="13s" delay="2s"  />
+      <GameCloud style={{ top: '46%',   left: '-6%'   }} width={130} opacity={0.65} drift="cloud-drift"   duration="16s" delay="5s"  />
+      <GameCloud style={{ bottom: '22%', right: '2%'  }} width={110} opacity={0.58} drift="cloud-drift-r" duration="11s" delay="3s"  />
+    </div>
+  );
+}
 
 const IconShare = ({ className }) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
@@ -142,6 +168,7 @@ const App = () => {
 
   const [itemName, setItemName] = useState(() => normalizeStoredItemName(initial));
   const [itemPrice, setItemPrice] = useState(initial?.itemPrice ?? 0);
+  const [waterDrops, setWaterDrops] = useState(initial?.waterDrops ?? 0);
 
   const [showResult, setShowResult] = useState(false);
   const [resultHours, setResultHours] = useState(0);
@@ -177,6 +204,7 @@ const App = () => {
       rating,
       itemName,
       itemPrice,
+      waterDrops,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   }, [
@@ -195,6 +223,7 @@ const App = () => {
     rating,
     itemName,
     itemPrice,
+    waterDrops,
   ]);
 
   useEffect(() => {
@@ -225,6 +254,30 @@ const App = () => {
     [monthlyTakeHome, savingsGoal, monthlyFixedCosts, history],
   );
 
+  const savingsProgressPct = useMemo(() => {
+    if (!(savingsGoal > 0)) return 0;
+    const saved = history
+      .filter((h) => h.intent === 'save_later')
+      .reduce((sum, h) => sum + (Number(h.price) || 0), 0);
+    return Math.min(100, (saved / savingsGoal) * 100);
+  }, [history, savingsGoal]);
+
+  const gardenSlots = useMemo(() => [
+    { locked: false, progress: savingsProgressPct },
+    {
+      locked: waterDrops < 10,
+      progress: waterDrops < 10 ? 0 : Math.min(100, ((waterDrops - 10) / 30) * 100),
+    },
+    {
+      locked: waterDrops < 40,
+      progress: waterDrops < 40 ? 0 : Math.min(100, ((waterDrops - 40) / 60) * 100),
+    },
+    {
+      locked: waterDrops < 100,
+      progress: waterDrops < 100 ? 0 : Math.min(100, ((waterDrops - 100) / 200) * 100),
+    },
+  ], [savingsProgressPct, waterDrops]);
+
   const coachMessage = snap.pctUsed >= 85 ? t.coachTight : t.coachCalm;
 
   const historyRows = useMemo(
@@ -244,6 +297,19 @@ const App = () => {
 
   const onPurchaseIntent = (intent) => {
     if (latestHistoryId == null) return;
+
+    const item = history.find((h) => h.id === latestHistoryId);
+    if (item && item.intent !== intent && hourlyWage > 0) {
+      const saveDrops = Math.round((item.price / hourlyWage) * 2);
+      const buyDrops = Math.round((item.price / hourlyWage) * 1);
+      let delta = 0;
+      if (item.intent === 'save_later') delta -= saveDrops;
+      if (item.intent === 'buy') delta += buyDrops;
+      if (intent === 'save_later') delta += saveDrops;
+      if (intent === 'buy') delta -= buyDrops;
+      setWaterDrops((prev) => Math.max(0, prev + delta));
+    }
+
     setHistory((prev) => prev.map((h) => (h.id === latestHistoryId ? { ...h, intent } : h)));
   };
 
@@ -456,7 +522,17 @@ const App = () => {
 
   return (
     <div className="app-gradient min-h-screen text-[var(--color-text)]">
-      <div className="mx-auto max-w-md px-4 pb-32 pt-3">
+      {visualTheme === 'game' && <GameClouds />}
+      <div className="relative z-10 mx-auto max-w-md px-4 pb-32 pt-3">
+        {tab === 'island' && (
+          <IslandScreen
+            t={t}
+            gardenSlots={gardenSlots}
+            waterDrops={waterDrops}
+            language={language}
+          />
+        )}
+
         {tab === 'calc' && (
           <CalcScreen
             t={t}
@@ -504,6 +580,7 @@ const App = () => {
             history={historyRows}
             onDeleteHistoryEntry={deleteHistoryEntry}
             onBell={onBell}
+            waterDrops={waterDrops}
           />
         )}
 
@@ -593,7 +670,7 @@ const App = () => {
           <BottomTabBar
             active={tab}
             onChange={setTab}
-            labels={{ calc: t.tabCalc, budget: t.tabBudget, profile: t.tabProfile }}
+            labels={{ island: t.tabIsland, calc: t.tabCalc, budget: t.tabBudget, profile: t.tabProfile }}
           />
         </div>
       </div>
