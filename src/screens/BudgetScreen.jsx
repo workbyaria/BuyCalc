@@ -174,9 +174,6 @@ export default function BudgetScreen({
         </div>
 
         <p className="mt-4 text-center text-sm italic text-[var(--color-subtext)] leading-relaxed">{coachMessage}</p>
-        <p className="mt-3 text-center text-[10px] font-medium uppercase tracking-[0.12em] text-[var(--color-subtext)] opacity-90">
-          {t.budgetSpentHint}
-        </p>
       </GlassCard>
 
       <div className="grid grid-cols-2 gap-3">

@@ -90,7 +90,6 @@ const extra = {
     monthlyFixedCosts: '每月固定支出',
     monthlyFixedCostsHint:
       '例如房租、保費、訂閱等「每月固定要付」的合計。會先從實領扣除，再扣儲蓄，剩下才是可選花費額度。',
-    budgetSpentHint: '可選額度 = 實領 − 固定支出 − 儲蓄；已使用僅計「決定購買」。',
     historyDelete: '刪除此筆',
     historyDeleteConfirm: '確定要刪除這筆反思紀錄嗎？此操作無法復原。',
   },
@@ -185,7 +184,6 @@ const extra = {
     monthlyFixedCosts: 'Monthly Fixed Costs',
     monthlyFixedCostsHint:
       'Rent, insurance, subscriptions—anything you pay the same each month. Subtracted from take-home before savings; what’s left is discretionary.',
-    budgetSpentHint: 'Discretionary = take-home − fixed costs − savings. Used counts only “Buying it”.',
     historyDelete: 'Delete entry',
     historyDeleteConfirm: 'Delete this reflection entry? This cannot be undone.',
   },
@@ -279,7 +277,6 @@ const extra = {
     monthlyFixedCosts: '每月固定支出',
     monthlyFixedCostsHint:
       '例如房租、保费、订阅等每月固定要付的合计。先从实发扣除，再扣储蓄，剩下才是可选花费额度。',
-    budgetSpentHint: '可选额度 = 实发 − 固定支出 − 储蓄；已使用仅计「决定购买」。',
     historyDelete: '删除此条',
     historyDeleteConfirm: '确定要删除这条反思记录吗？此操作无法撤销。',
   },
@@ -374,7 +371,6 @@ const extra = {
     monthlyFixedCosts: 'Gastos fijos mensuales',
     monthlyFixedCostsHint:
       'Alquiler, seguros, suscripciones… lo que pagas igual cada mes. Se resta del ingreso neto antes del ahorro; lo demás es discrecional.',
-    budgetSpentHint: 'Discrecional = ingreso − fijos − ahorro. “Usado” solo cuenta “Lo compro”.',
     historyDelete: 'Eliminar',
     historyDeleteConfirm: '¿Eliminar esta entrada del historial? No se puede deshacer.',
   },
