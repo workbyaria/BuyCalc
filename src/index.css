@@ -248,6 +248,23 @@ input:focus {
   background: linear-gradient(180deg, #7ecde8 0%, #a8dcf0 55%, #c4ecfa 100%);
 }
 
+@keyframes island-float {
+  0%, 100% { transform: translateY(0px);  }
+  50%       { transform: translateY(-7px); }
+}
+.island-float {
+  animation: island-float 5s ease-in-out infinite;
+}
+
+/* Negative plant margins collapse layout height; reserve space so footer scrolls below the island */
+.island-garden {
+  padding-bottom: clamp(6rem, 22vw, 9rem);
+}
+
+.island-scene {
+  margin-bottom: 0.5rem;
+}
+
 @keyframes cloud-drift {
   0%, 100% { transform: translateX(0px); }
   50%       { transform: translateX(14px); }

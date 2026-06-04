@@ -1,189 +1,195 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import GardenIsland from '../components/GardenIsland.jsx';
+import TopHeader from '../components/TopHeader.jsx';
 
-const UNLOCK_THRESHOLDS = [0, 10, 40, 100];
-
-const STAGE_EMOJI = ['🌰', '🌱', '🪴', '🌿', '🌳'];
-function stageEmoji(progress) {
-  if (progress >= 80) return STAGE_EMOJI[4];
-  if (progress >= 50) return STAGE_EMOJI[3];
-  if (progress >= 30) return STAGE_EMOJI[2];
-  if (progress >= 10) return STAGE_EMOJI[1];
-  return STAGE_EMOJI[0];
-}
-
-const STAGE_LABELS = {
-  zh:   ['種子', '幼芽', '樹苗', '小樹', '大樹'],
-  zhCN: ['种子', '幼芽', '树苗', '小树', '大树'],
-  en:   ['Seed', 'Sprout', 'Sapling', 'Young Tree', 'Full Tree'],
-  es:   ['Semilla', 'Brote', 'Plántula', 'Árbol Joven', 'Árbol Pleno'],
-};
-function stageName(progress, language) {
-  const labels = STAGE_LABELS[language] ?? STAGE_LABELS.en;
-  if (progress >= 80) return labels[4];
-  if (progress >= 50) return labels[3];
-  if (progress >= 30) return labels[2];
-  if (progress >= 10) return labels[1];
-  return labels[0];
-}
-
-function SlotRow({ slot, index, language, unlockDrops, t }) {
-  if (slot.locked) {
-    return (
-      <div className="flex items-center gap-3">
-        <div
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-lg"
-          style={{ background: 'rgba(168,196,212,0.18)' }}
-        >
-          🔒
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="text-[11px] font-semibold text-[var(--color-subtext)] uppercase tracking-wide">
-            Plot {index + 1}
-          </div>
-          <div className="mt-0.5 text-xs text-[var(--color-subtext)]">
-            {t.islandNextUnlock.replace('{{n}}', String(unlockDrops))}
-          </div>
-        </div>
-        <div
-          className="rounded-full px-2.5 py-1 text-[10px] font-bold"
-          style={{
-            background: 'rgba(93,168,232,0.12)',
-            color: '#2a6a9e',
-            border: '1px solid rgba(93,168,232,0.25)',
-          }}
-        >
-          💧{unlockDrops}
-        </div>
-      </div>
-    );
-  }
-
+const ISLAND_UNLOCK_AT = [0, 30];
+const ISLANDS = [
+  { type: 'grassland',  nameKey: 'islandGrassland'  },
+  { type: 'rainforest', nameKey: 'islandRainforest' },
+];
+/* ── HUD chip (game-button style) ────────────────────────── */
+function HudChip({ children, accent = 'rgba(255,255,255,0.88)', text = '#2d4a5a', shadow = 'rgba(0,0,0,0.14)' }) {
   return (
-    <div className="flex items-center gap-3">
-      <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-xl"
-        style={{ background: 'var(--icon-tile)' }}
+    <span
+      className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-black tabular-nums"
+      style={{
+        background: 'rgba(255,255,255,0.94)',
+        border: `2px solid ${accent}`,
+        boxShadow: `0 3px 0 ${shadow}, 0 5px 14px ${shadow}`,
+        color: text,
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+/* ── Dot indicator ────────────────────────────────────────── */
+function IslandDots({ count, active, onClick }) {
+  return (
+    <div className="flex items-center gap-1.5">
+      {Array.from({ length: count }, (_, i) => (
+        <button
+          key={i} type="button"
+          onClick={() => { navigator.vibrate?.(15); onClick(i); }}
+          className="rounded-full transition-all duration-300"
+          style={{
+            width:  i === active ? 18 : 7,
+            height: 7,
+            background: i === active ? '#5caf50' : 'rgba(255,255,255,0.55)',
+          }}
+          aria-label={`Island ${i + 1}`}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ── Arrow button ─────────────────────────────────────────── */
+function ArrowBtn({ dir, onClick, disabled }) {
+  return (
+    <button
+      type="button"
+      onClick={() => { if (!disabled) { navigator.vibrate?.(20); onClick(); } }}
+      disabled={disabled}
+      className={`flex h-11 w-11 items-center justify-center rounded-full transition-all duration-100 ${
+        disabled ? 'opacity-30' : 'active:translate-y-[3px]'
+      }`}
+      style={disabled ? {
+        background: 'rgba(168,196,212,0.30)',
+        border: '2px solid rgba(168,196,212,0.20)',
+      } : {
+        background: 'linear-gradient(150deg, #5ec8fa, #2e8fd6)',
+        border: '2.5px solid #1a6cb0',
+        boxShadow: '0 4px 0 #145494, 0 5px 16px rgba(30,100,195,0.42)',
+      }}
+      aria-label={dir === 'left' ? 'Previous island' : 'Next island'}
+    >
+      <svg viewBox="0 0 24 24" width={18} height={18} fill="none"
+        stroke={disabled ? 'rgba(168,196,212,0.50)' : 'white'}
+        strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"
       >
-        {stageEmoji(slot.progress)}
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between gap-2 mb-1.5">
-          <span className="text-xs font-semibold text-[var(--color-text)]">
-            {stageName(slot.progress, language)}
-          </span>
-          <span className="text-[11px] tabular-nums font-bold text-[var(--color-subtext)]">
-            {Math.round(slot.progress)}%
-          </span>
-        </div>
-        <div
-          className="h-1.5 overflow-hidden rounded-full"
-          style={{ background: 'var(--ring-track)' }}
-        >
-          <div
-            className="h-full rounded-full transition-all duration-700"
-            style={{ width: `${slot.progress}%`, background: '#5caf50' }}
-          />
-        </div>
+        {dir === 'left' ? <path d="M15 18l-6-6 6-6" /> : <path d="M9 18l6-6-6-6" />}
+      </svg>
+    </button>
+  );
+}
+
+/* ── Locked island overlay ────────────────────────────────── */
+function LockedIslandOverlay({ dropsNeeded, t }) {
+  return (
+    <div
+      className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
+      style={{ background: 'rgba(20,40,60,0.60)', backdropFilter: 'blur(4px)' }}
+    >
+      <div
+        className="pointer-events-auto flex flex-col items-center gap-2.5 rounded-3xl px-7 py-5 text-center"
+        style={{
+          background: 'rgba(255,255,255,0.96)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+          border: '2px solid rgba(255,255,255,0.9)',
+        }}
+      >
+        <span className="text-5xl">🌴</span>
+        <p className="text-base font-black text-[var(--color-text)]">
+          {t.islandLockedHint.replace('{{n}}', String(dropsNeeded))}
+        </p>
       </div>
     </div>
   );
 }
 
-export default function IslandScreen({ t, gardenSlots, waterDrops, language }) {
-  const nextLocked   = gardenSlots.findIndex((s) => s.locked);
-  const growingCount = gardenSlots.filter((s) => !s.locked).length;
+/* ── IslandScreen ─────────────────────────────────────────── */
+export default function IslandScreen({ t, allIslandSlots, waterDrops, language, logoSrc, onBell }) {
+  const [islandIdx, setIslandIdx] = useState(0);
+  const startXRef                 = useRef(null);
+
+  const island      = ISLANDS[islandIdx];
+  const slots       = allIslandSlots[islandIdx] ?? [];
+  const unlockAt    = ISLAND_UNLOCK_AT[islandIdx] ?? 0;
+  const unlocked    = waterDrops >= unlockAt;
+  const dropsNeeded = Math.max(0, unlockAt - waterDrops);
+  const islandName  = t[island.nameKey] ?? island.type;
+
+  const growingCount = slots.filter((s) => !s.locked).length;
+  const nextLocked   = slots.findIndex((s) => s.locked);
+
+  const goLeft  = () => islandIdx > 0 && setIslandIdx(i => i - 1);
+  const goRight = () => islandIdx < ISLANDS.length - 1 && setIslandIdx(i => i + 1);
+
+  const onPtrDown = (e) => { startXRef.current = e.clientX; };
+  const onPtrUp   = (e) => {
+    if (startXRef.current === null) return;
+    const dx = e.clientX - startXRef.current;
+    if (dx < -50) { goRight(); navigator.vibrate?.(20); }
+    if (dx > 50)  { goLeft();  navigator.vibrate?.(20); }
+    startXRef.current = null;
+  };
 
   return (
-    <div className="space-y-5 pb-4">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">{t.islandTitle}</h1>
-          <p className="mt-1 text-sm text-[var(--color-subtext)]">{t.islandSubtitle}</p>
+    <div className="flex flex-col">
+      {/* App banner */}
+      <TopHeader title="BuyCalc" bellAriaLabel={t.notificationBell} logoSrc={logoSrc} onBell={onBell} />
+
+      {/* HUD — 20px below banner; stays fixed while island bobs */}
+      <div className="mt-5 flex items-start justify-between gap-2 px-0.5">
+        <HudChip accent="rgba(93,168,232,0.45)" text="#1560a0" shadow="rgba(93,168,232,0.30)">
+          <svg viewBox="0 0 16 20" width={12} height={15} aria-hidden="true">
+            <path d="M8 1C8 1,1.5 9.5,1.5 13.5C1.5 17,4.4 19,8 19C11.6 19,14.5 17,14.5 13.5C14.5 9.5,8 1,8 1Z" fill="#5da8e8" />
+          </svg>
+          {waterDrops}
+        </HudChip>
+
+        <div className="flex flex-col items-center gap-1.5">
+          <span
+            className="rounded-full px-3.5 py-1 text-[11px] font-black uppercase tracking-[0.12em]"
+            style={{
+              background: 'rgba(255,255,255,0.90)',
+              color: '#2d4a5a',
+              border: '1.5px solid rgba(255,255,255,0.98)',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.12)',
+            }}
+          >
+            {islandName}
+          </span>
+          <IslandDots count={ISLANDS.length} active={islandIdx} onClick={setIslandIdx} />
         </div>
 
-        {/* Water drops + plant count */}
-        <div className="flex shrink-0 flex-col items-end gap-1.5 pt-1">
-          <span
-            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold tabular-nums"
-            style={{
-              background: 'rgba(255,255,255,0.92)',
-              color: '#1a6a9a',
-              border: '1.5px solid rgba(93,168,232,0.28)',
-              boxShadow: '0 2px 10px rgba(93,168,232,0.15)',
-            }}
-          >
-            <svg viewBox="0 0 16 20" width={11} height={14} aria-hidden="true">
-              <path d="M8 1C8 1,1.5 9.5,1.5 13.5C1.5 17,4.4 19,8 19C11.6 19,14.5 17,14.5 13.5C14.5 9.5,8 1,8 1Z" fill="#5da8e8" />
-            </svg>
-            {waterDrops}
-          </span>
-          <span
-            className="rounded-full px-2.5 py-0.5 text-[10px] font-semibold"
-            style={{
-              background: 'rgba(92,175,80,0.14)',
-              color: '#2d8a42',
-              border: '1px solid rgba(92,175,80,0.28)',
-            }}
-          >
-            🌱 {growingCount} / {gardenSlots.length}
-          </span>
+        <HudChip accent="rgba(92,175,80,0.45)" text="#2a7a36" shadow="rgba(92,175,80,0.28)">
+          🌱 {growingCount}/{slots.length}
+        </HudChip>
+      </div>
+
+      {/* Island scene — overflow visible; scroll buffer keeps footer below the art */}
+      <div
+        className="island-scene relative mt-2 overflow-visible"
+        onPointerDown={onPtrDown}
+        onPointerUp={onPtrUp}
+        onPointerLeave={() => { startXRef.current = null; }}
+        style={{ touchAction: 'pan-y' }}
+      >
+        <div className="island-float relative overflow-visible">
+          <GardenIsland slots={slots} language={language} islandType={island.type} />
+          {!unlocked && <LockedIslandOverlay dropsNeeded={dropsNeeded} t={t} />}
+        </div>
+
+        {/* Above locked overlay (z-20) so user can always navigate back */}
+        <div className="pointer-events-none absolute inset-x-0 z-30 flex items-center justify-between" style={{ bottom: 140 }}>
+          <div className="pointer-events-auto">
+            <ArrowBtn dir="left" onClick={goLeft} disabled={islandIdx === 0} />
+          </div>
+          <div className="pointer-events-auto">
+            <ArrowBtn dir="right" onClick={goRight} disabled={islandIdx === ISLANDS.length - 1} />
+          </div>
         </div>
       </div>
 
-      {/* Garden — floats against sky, no card wrapper */}
-      <GardenIsland slots={gardenSlots} language={language} />
-
-      {/* Unlock hint */}
-      {nextLocked === -1 ? (
-        <p className="text-center text-sm font-semibold" style={{ color: '#5caf50' }}>
+      {unlocked && nextLocked === -1 && (
+        <p className="mt-2 text-center text-sm font-bold" style={{ color: '#5caf50' }}>
           🌟 {t.islandAllUnlocked}
         </p>
-      ) : (
-        <p className="text-center text-xs text-[var(--color-subtext)]">
-          {t.islandNextUnlock.replace('{{n}}', String(UNLOCK_THRESHOLDS[nextLocked] - waterDrops))}
-        </p>
       )}
-
-      {/* Slot progress cards */}
-      <div
-        className="rounded-[28px] border divide-y"
-        style={{
-          background: 'var(--glass-bg)',
-          borderColor: 'var(--glass-border)',
-          boxShadow: 'var(--glass-shadow)',
-          divideColor: 'var(--glass-border)',
-        }}
-      >
-        {gardenSlots.map((slot, i) => (
-          <div
-            key={i}
-            className="px-4 py-3.5"
-            style={{ borderColor: 'var(--glass-border)' }}
-          >
-            <SlotRow
-              slot={slot}
-              index={i}
-              language={language}
-              unlockDrops={UNLOCK_THRESHOLDS[i]}
-              t={t}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* How-to tip */}
-      <div
-        className="rounded-[22px] border px-4 py-3 text-center text-xs leading-relaxed"
-        style={{
-          background: 'var(--glass-bg-muted)',
-          borderColor: 'var(--glass-border)',
-          color: 'var(--color-subtext)',
-        }}
-      >
-        {t.islandHowTo}
-      </div>
     </div>
   );
 }

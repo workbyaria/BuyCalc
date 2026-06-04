@@ -63,7 +63,6 @@ const defaultState = () => ({
   rating: 3,
   itemName: '',
   itemPrice: 0,
-  waterDrops: 0,
 });
 
 function GameCloud({ style, width, opacity, drift, duration, delay }) {
@@ -168,7 +167,6 @@ const App = () => {
 
   const [itemName, setItemName] = useState(() => normalizeStoredItemName(initial));
   const [itemPrice, setItemPrice] = useState(initial?.itemPrice ?? 0);
-  const [waterDrops, setWaterDrops] = useState(initial?.waterDrops ?? 0);
 
   const [showResult, setShowResult] = useState(false);
   const [resultHours, setResultHours] = useState(0);
@@ -204,7 +202,6 @@ const App = () => {
       rating,
       itemName,
       itemPrice,
-      waterDrops,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   }, [
@@ -223,7 +220,6 @@ const App = () => {
     rating,
     itemName,
     itemPrice,
-    waterDrops,
   ]);
 
   useEffect(() => {
@@ -254,6 +250,14 @@ const App = () => {
     [monthlyTakeHome, savingsGoal, monthlyFixedCosts, history],
   );
 
+  const waterDrops = useMemo(() => {
+    if (!(hourlyWage > 0)) return 0;
+    const saved = history
+      .filter((h) => h.intent === 'save_later')
+      .reduce((sum, h) => sum + (Number(h.price) || 0), 0);
+    return Math.floor(saved / hourlyWage);
+  }, [history, hourlyWage]);
+
   const savingsProgressPct = useMemo(() => {
     if (!(savingsGoal > 0)) return 0;
     const saved = history
@@ -262,20 +266,31 @@ const App = () => {
     return Math.min(100, (saved / savingsGoal) * 100);
   }, [history, savingsGoal]);
 
+  const gardenSlots2 = useMemo(() => {
+    const u = waterDrops >= 30;
+    return [
+      // Bottom row (slots 0-3)
+      { locked: !u,               progress: !u ? 0 : Math.min(100, ((waterDrops - 30)  / 40)  * 100) },
+      { locked: waterDrops < 50,  progress: waterDrops < 50  ? 0 : Math.min(100, ((waterDrops - 50)  / 50)  * 100) },
+      { locked: waterDrops < 80,  progress: waterDrops < 80  ? 0 : Math.min(100, ((waterDrops - 80)  / 80)  * 100) },
+      { locked: waterDrops < 150, progress: waterDrops < 150 ? 0 : Math.min(100, ((waterDrops - 150) / 150) * 100) },
+      // Top row (slots 4-6)
+      { locked: waterDrops < 45,  progress: waterDrops < 45  ? 0 : Math.min(100, ((waterDrops - 45)  / 50)  * 100) },
+      { locked: waterDrops < 90,  progress: waterDrops < 90  ? 0 : Math.min(100, ((waterDrops - 90)  / 80)  * 100) },
+      { locked: waterDrops < 170, progress: waterDrops < 170 ? 0 : Math.min(100, ((waterDrops - 170) / 150) * 100) },
+    ];
+  }, [waterDrops]);
+
   const gardenSlots = useMemo(() => [
-    { locked: false, progress: savingsProgressPct },
-    {
-      locked: waterDrops < 10,
-      progress: waterDrops < 10 ? 0 : Math.min(100, ((waterDrops - 10) / 30) * 100),
-    },
-    {
-      locked: waterDrops < 40,
-      progress: waterDrops < 40 ? 0 : Math.min(100, ((waterDrops - 40) / 60) * 100),
-    },
-    {
-      locked: waterDrops < 100,
-      progress: waterDrops < 100 ? 0 : Math.min(100, ((waterDrops - 100) / 200) * 100),
-    },
+    // Bottom row (slots 0-3)
+    { locked: false,              progress: savingsProgressPct },
+    { locked: waterDrops < 10,   progress: waterDrops < 10  ? 0 : Math.min(100, ((waterDrops - 10)  / 30)  * 100) },
+    { locked: waterDrops < 40,   progress: waterDrops < 40  ? 0 : Math.min(100, ((waterDrops - 40)  / 60)  * 100) },
+    { locked: waterDrops < 100,  progress: waterDrops < 100 ? 0 : Math.min(100, ((waterDrops - 100) / 200) * 100) },
+    // Top row (slots 4-6)
+    { locked: waterDrops < 20,   progress: waterDrops < 20  ? 0 : Math.min(100, ((waterDrops - 20)  / 35)  * 100) },
+    { locked: waterDrops < 70,   progress: waterDrops < 70  ? 0 : Math.min(100, ((waterDrops - 70)  / 80)  * 100) },
+    { locked: waterDrops < 130,  progress: waterDrops < 130 ? 0 : Math.min(100, ((waterDrops - 130) / 150) * 100) },
   ], [savingsProgressPct, waterDrops]);
 
   const coachMessage = snap.pctUsed >= 85 ? t.coachTight : t.coachCalm;
@@ -297,19 +312,6 @@ const App = () => {
 
   const onPurchaseIntent = (intent) => {
     if (latestHistoryId == null) return;
-
-    const item = history.find((h) => h.id === latestHistoryId);
-    if (item && item.intent !== intent && hourlyWage > 0) {
-      const saveDrops = Math.round((item.price / hourlyWage) * 2);
-      const buyDrops = Math.round((item.price / hourlyWage) * 1);
-      let delta = 0;
-      if (item.intent === 'save_later') delta -= saveDrops;
-      if (item.intent === 'buy') delta += buyDrops;
-      if (intent === 'save_later') delta += saveDrops;
-      if (intent === 'buy') delta -= buyDrops;
-      setWaterDrops((prev) => Math.max(0, prev + delta));
-    }
-
     setHistory((prev) => prev.map((h) => (h.id === latestHistoryId ? { ...h, intent } : h)));
   };
 
@@ -527,9 +529,11 @@ const App = () => {
         {tab === 'island' && (
           <IslandScreen
             t={t}
-            gardenSlots={gardenSlots}
+            allIslandSlots={[gardenSlots, gardenSlots2]}
             waterDrops={waterDrops}
             language={language}
+            logoSrc={logoSrc}
+            onBell={onBell}
           />
         )}
 
@@ -641,7 +645,11 @@ const App = () => {
           </>
         )}
 
-        <footer className="mt-8 text-center text-[10px] font-light tracking-[0.2em] text-[var(--color-subtext)]">
+        <footer
+          className={`text-center text-[10px] font-light tracking-[0.2em] text-[var(--color-subtext)] ${
+            tab === 'island' ? 'mt-10' : 'mt-8'
+          }`}
+        >
           <p>
             BuyCalc © {new Date().getFullYear()} ·{' '}
             <a href="http://www.friendlycatgroup.com/" target="_blank" rel="noopener noreferrer" className="underline">
