@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import GardenIsland from '../components/GardenIsland.jsx';
 import TopHeader from '../components/TopHeader.jsx';
+import { ISLAND_DEMO } from '../islandDemo.js';
 
 const ISLAND_UNLOCK_AT = [0, 30];
 const ISLANDS = [
@@ -108,7 +109,7 @@ export default function IslandScreen({ t, allIslandSlots, waterDrops, language, 
   const island      = ISLANDS[islandIdx];
   const slots       = allIslandSlots[islandIdx] ?? [];
   const unlockAt    = ISLAND_UNLOCK_AT[islandIdx] ?? 0;
-  const unlocked    = waterDrops >= unlockAt;
+  const unlocked    = ISLAND_DEMO || waterDrops >= unlockAt;
   const dropsNeeded = Math.max(0, unlockAt - waterDrops);
   const islandName  = t[island.nameKey] ?? island.type;
 

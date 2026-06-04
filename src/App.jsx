@@ -8,6 +8,7 @@ import { i18n, getDetectedLanguage, QUICK_CATEGORY_KEYS, I18N_LANGUAGE_CODES } f
 import { formatMoney } from './utils/money.js';
 import { hoursFromPrice, budgetSnapshot, flexibleBudget, workDaysFromHours, workHoursFromPurchase } from './utils/budget.js';
 import { themeIds } from './theme.js';
+import { ISLAND_DEMO, DEMO_WATER_DROPS, demoGardenSlots } from './islandDemo.js';
 
 const STORAGE_KEY = 'buycalc_state_v2';
 
@@ -267,31 +268,33 @@ const App = () => {
   }, [history, savingsGoal]);
 
   const gardenSlots2 = useMemo(() => {
+    if (ISLAND_DEMO) return demoGardenSlots();
     const u = waterDrops >= 30;
     return [
-      // Bottom row (slots 0-3)
       { locked: !u,               progress: !u ? 0 : Math.min(100, ((waterDrops - 30)  / 40)  * 100) },
       { locked: waterDrops < 50,  progress: waterDrops < 50  ? 0 : Math.min(100, ((waterDrops - 50)  / 50)  * 100) },
       { locked: waterDrops < 80,  progress: waterDrops < 80  ? 0 : Math.min(100, ((waterDrops - 80)  / 80)  * 100) },
       { locked: waterDrops < 150, progress: waterDrops < 150 ? 0 : Math.min(100, ((waterDrops - 150) / 150) * 100) },
-      // Top row (slots 4-6)
       { locked: waterDrops < 45,  progress: waterDrops < 45  ? 0 : Math.min(100, ((waterDrops - 45)  / 50)  * 100) },
       { locked: waterDrops < 90,  progress: waterDrops < 90  ? 0 : Math.min(100, ((waterDrops - 90)  / 80)  * 100) },
       { locked: waterDrops < 170, progress: waterDrops < 170 ? 0 : Math.min(100, ((waterDrops - 170) / 150) * 100) },
     ];
   }, [waterDrops]);
 
-  const gardenSlots = useMemo(() => [
-    // Bottom row (slots 0-3)
-    { locked: false,              progress: savingsProgressPct },
-    { locked: waterDrops < 10,   progress: waterDrops < 10  ? 0 : Math.min(100, ((waterDrops - 10)  / 30)  * 100) },
-    { locked: waterDrops < 40,   progress: waterDrops < 40  ? 0 : Math.min(100, ((waterDrops - 40)  / 60)  * 100) },
-    { locked: waterDrops < 100,  progress: waterDrops < 100 ? 0 : Math.min(100, ((waterDrops - 100) / 200) * 100) },
-    // Top row (slots 4-6)
-    { locked: waterDrops < 20,   progress: waterDrops < 20  ? 0 : Math.min(100, ((waterDrops - 20)  / 35)  * 100) },
-    { locked: waterDrops < 70,   progress: waterDrops < 70  ? 0 : Math.min(100, ((waterDrops - 70)  / 80)  * 100) },
-    { locked: waterDrops < 130,  progress: waterDrops < 130 ? 0 : Math.min(100, ((waterDrops - 130) / 150) * 100) },
-  ], [savingsProgressPct, waterDrops]);
+  const gardenSlots = useMemo(() => {
+    if (ISLAND_DEMO) return demoGardenSlots();
+    return [
+      { locked: false,              progress: savingsProgressPct },
+      { locked: waterDrops < 10,   progress: waterDrops < 10  ? 0 : Math.min(100, ((waterDrops - 10)  / 30)  * 100) },
+      { locked: waterDrops < 40,   progress: waterDrops < 40  ? 0 : Math.min(100, ((waterDrops - 40)  / 60)  * 100) },
+      { locked: waterDrops < 100,  progress: waterDrops < 100 ? 0 : Math.min(100, ((waterDrops - 100) / 200) * 100) },
+      { locked: waterDrops < 20,   progress: waterDrops < 20  ? 0 : Math.min(100, ((waterDrops - 20)  / 35)  * 100) },
+      { locked: waterDrops < 70,   progress: waterDrops < 70  ? 0 : Math.min(100, ((waterDrops - 70)  / 80)  * 100) },
+      { locked: waterDrops < 130,  progress: waterDrops < 130 ? 0 : Math.min(100, ((waterDrops - 130) / 150) * 100) },
+    ];
+  }, [savingsProgressPct, waterDrops]);
+
+  const islandWaterDrops = ISLAND_DEMO ? DEMO_WATER_DROPS : waterDrops;
 
   const coachMessage = snap.pctUsed >= 85 ? t.coachTight : t.coachCalm;
 
@@ -530,7 +533,7 @@ const App = () => {
           <IslandScreen
             t={t}
             allIslandSlots={[gardenSlots, gardenSlots2]}
-            waterDrops={waterDrops}
+            waterDrops={islandWaterDrops}
             language={language}
             logoSrc={logoSrc}
             onBell={onBell}
