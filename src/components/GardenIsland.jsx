@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import PlantCharacter, { getStageIndex, getStageName, VARIANT_NAMES } from './PlantCharacter.jsx';
+import PlantCharacter, { getStageIndex, VARIANT_NAMES } from './PlantCharacter.jsx';
 
 /* ── Island configs ───────────────────────────────────────── */
 // Bottom row: 4 larger plants (slots 0-3) — appear in front
@@ -233,90 +233,132 @@ function LockedPlot({ width, unlockDrops }) {
 /* ── Plant detail popup — collectible card style ──────────── */
 const LEVEL_COLORS = ['#8B6914', '#74c69d', '#5caf50', '#f0a030', '#2d8a42'];
 
-function PlantDetailPopup({ slot, plotIndex, plots, language, onClose }) {
+function PlantDetailPopup({ slot, plotIndex, plots, language, t, onClose }) {
   const plot      = plots[plotIndex];
   const stageIdx  = getStageIndex(slot.progress);
-  const stageName = getStageName(slot.progress, language);
   const varName   = VARIANT_NAMES[plot.variant]?.[language] ?? VARIANT_NAMES[plot.variant]?.en ?? '';
   const level     = stageIdx + 1;
   const lc        = LEVEL_COLORS[stageIdx] ?? '#5caf50';
+  const lcDark    = lc + 'cc';
 
   const content = (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-6"
-      style={{ backdropFilter: 'blur(6px)' }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-5"
+      style={{ background: 'rgba(12, 32, 52, 0.52)', backdropFilter: 'blur(10px)' }}
       onClick={onClose}
     >
       <div
-        className="w-full max-w-[300px] overflow-hidden rounded-[32px]"
+        className="w-full max-w-[320px] overflow-hidden rounded-[26px]"
         style={{
-          background: '#ffffff',
-          border: `2px solid ${lc}30`,
-          boxShadow: `0 12px 48px rgba(0,0,0,0.30), 0 0 0 1px ${lc}22`,
+          background: 'linear-gradient(180deg, #ffffff 0%, #eef6fa 100%)',
+          border: `3px solid ${lc}`,
+          boxShadow: `0 5px 0 ${lcDark}, 0 18px 48px rgba(0,0,0,0.32)`,
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Gradient header stripe */}
-        <div className="h-2.5 w-full" style={{ background: `linear-gradient(90deg, ${lc}, ${lc}99)` }} />
-
-        {/* Plant illustration */}
-        <div className="flex justify-center pt-5 pb-1">
-          <PlantCharacter progressPercent={slot.progress} language={language} width={118} variant={plot.variant} />
-        </div>
-
-        {/* Species badge */}
-        <div className="flex justify-center mb-2">
-          <span
-            className="rounded-full px-3 py-0.5 text-[10px] font-black uppercase tracking-[0.14em]"
-            style={{ background: lc + '20', color: lc, border: `1.5px solid ${lc}44` }}
+        {/* Illustration stage */}
+        <div
+          className="relative px-5 pt-5 pb-3"
+          style={{ background: `linear-gradient(160deg, ${lc}28 0%, ${lc}10 45%, transparent 100%)` }}
+        >
+          <div
+            className="mx-auto flex max-w-[200px] justify-center rounded-[22px] py-4"
+            style={{
+              background: 'rgba(255,255,255,0.72)',
+              boxShadow: 'inset 0 2px 10px rgba(255,255,255,0.95), 0 6px 20px rgba(0,0,0,0.07)',
+              border: '2px solid rgba(255,255,255,0.9)',
+            }}
           >
-            {varName}
-          </span>
-        </div>
-
-        {/* Stage name + level */}
-        <p className="text-center text-lg font-black text-[var(--color-text)] leading-tight">{stageName}</p>
-        <p className="text-center text-xs text-[var(--color-subtext)] mt-0.5">Level {level} / 5</p>
-
-        {/* Progress bar */}
-        <div className="mx-5 mt-4">
-          <div className="mb-1.5 flex items-center justify-between">
-            <span className="text-[11px] font-bold text-[var(--color-subtext)] uppercase tracking-wide">Growth</span>
-            <span className="text-sm font-black tabular-nums" style={{ color: lc }}>{Math.round(slot.progress)}%</span>
-          </div>
-          <div className="h-3 overflow-hidden rounded-full" style={{ background: 'var(--ring-track)' }}>
-            <div
-              className="h-full rounded-full transition-all duration-700"
-              style={{ width: `${slot.progress}%`, background: `linear-gradient(90deg, ${lc}bb, ${lc})` }}
+            <PlantCharacter
+              progressPercent={slot.progress}
+              language={language}
+              width={112}
+              variant={plot.variant}
+              hideLevelBadge
             />
           </div>
         </div>
 
-        {/* Stage dots — active dot larger */}
-        <div className="mt-3.5 flex items-center justify-center gap-2">
-          {[1,2,3,4,5].map((l) => (
-            <div
-              key={l}
-              className="rounded-full transition-all duration-300"
+        {/* Stats panel */}
+        <div className="px-5 pb-5">
+          <div
+            className="flex items-center justify-between gap-3 border-b-2 pb-3"
+            style={{ borderColor: 'rgba(45, 74, 90, 0.08)' }}
+          >
+            <h2 className="min-w-0 truncate text-[22px] font-black leading-tight tracking-tight text-[#2d4a5a]">
+              {varName}
+            </h2>
+            <span
+              className="shrink-0 rounded-full px-3 py-1 text-xs font-black tabular-nums text-white"
               style={{
-                width:  l === level ? 14 : 9,
-                height: l === level ? 14 : 9,
-                background: l <= level ? lc : 'var(--ring-track)',
-                boxShadow: l === level ? `0 0 6px ${lc}88` : 'none',
+                background: `linear-gradient(150deg, ${lc}, ${lcDark})`,
+                border: `2px solid ${lcDark}`,
+                boxShadow: `0 3px 0 ${lcDark}`,
               }}
-            />
-          ))}
-        </div>
+            >
+              Lv.{level}
+            </span>
+          </div>
 
-        {/* Close button */}
-        <div className="px-5 pb-5 pt-4">
+          <div className="mt-4">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6a8a9a]">
+                {t.plantGrowth}
+              </span>
+              <span className="text-sm font-black tabular-nums" style={{ color: lc }}>
+                {Math.round(slot.progress)}%
+              </span>
+            </div>
+            <div
+              className="h-[18px] overflow-hidden rounded-full p-[3px]"
+              style={{
+                background: '#c5dce8',
+                border: '2px solid #a8c8d8',
+                boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)',
+              }}
+            >
+              <div
+                className="h-full rounded-full transition-all duration-700"
+                style={{
+                  width: `${slot.progress}%`,
+                  background: `linear-gradient(180deg, ${lc} 0%, ${lcDark} 100%)`,
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.45)',
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center justify-center gap-2.5">
+            {[1, 2, 3, 4, 5].map((l) => {
+              const active = l === level;
+              const unlocked = l <= level;
+              return (
+                <div
+                  key={l}
+                  className="rounded-full transition-all duration-300"
+                  style={{
+                    width: active ? 18 : 11,
+                    height: active ? 18 : 11,
+                    background: unlocked ? lc : '#c5dce8',
+                    border: unlocked ? `2px solid ${lcDark}` : '2px solid #a8c8d8',
+                    boxShadow: active ? `0 0 10px ${lc}99, 0 2px 0 ${lcDark}` : 'none',
+                  }}
+                />
+              );
+            })}
+          </div>
+
           <button
             type="button"
             onClick={onClose}
-            className="w-full rounded-2xl py-3 text-sm font-bold transition-all hover:opacity-80 active:scale-[0.97]"
-            style={{ background: lc + '18', color: lc, border: `1.5px solid ${lc}35` }}
+            className="mt-5 w-full rounded-2xl py-3.5 text-sm font-black text-white transition-all duration-100 active:translate-y-[3px]"
+            style={{
+              background: `linear-gradient(150deg, ${lc}, ${lcDark})`,
+              border: `2.5px solid ${lcDark}`,
+              boxShadow: `0 4px 0 ${lcDark}, 0 8px 20px ${lc}44`,
+            }}
           >
-            Close
+            {t.plantClose}
           </button>
         </div>
       </div>
@@ -329,7 +371,7 @@ function PlantDetailPopup({ slot, plotIndex, plots, language, onClose }) {
 }
 
 /* ── GardenIsland ─────────────────────────────────────────── */
-export default function GardenIsland({ slots = [], language = 'zh', islandType = 'grassland' }) {
+export default function GardenIsland({ slots = [], language = 'zh', islandType = 'grassland', t }) {
   const [selected, setSelected] = useState(null);
   const plots    = ISLAND_PLOTS[islandType] ?? GRASSLAND_PLOTS;
   const Platform = PLAT[islandType] ?? IslandPlatformGrassland;
@@ -406,6 +448,7 @@ export default function GardenIsland({ slots = [], language = 'zh', islandType =
           plotIndex={selected}
           plots={plots}
           language={language}
+          t={t}
           onClose={() => setSelected(null)}
         />
       )}

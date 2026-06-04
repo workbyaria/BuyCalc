@@ -171,7 +171,7 @@ export default function IslandScreen({ t, allIslandSlots, waterDrops, language, 
         style={{ touchAction: 'pan-y' }}
       >
         <div className="island-float relative overflow-visible">
-          <GardenIsland slots={slots} language={language} islandType={island.type} />
+          <GardenIsland slots={slots} language={language} islandType={island.type} t={t} />
           {!unlocked && <LockedIslandOverlay dropsNeeded={dropsNeeded} t={t} />}
         </div>
 

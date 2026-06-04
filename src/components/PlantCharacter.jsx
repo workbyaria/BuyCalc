@@ -14,11 +14,6 @@ export function getStageIndex(pct) {
   return idx === -1 ? STAGES.length - 1 : idx;
 }
 
-export function getStageName(pct, language) {
-  const stage = STAGES[getStageIndex(pct)];
-  return stage.label[language] ?? stage.label.en;
-}
-
 /* ── Shared helpers ───────────────────────────────────────── */
 
 function Soil() {
@@ -793,24 +788,24 @@ export const VARIANT_NAMES = {
   bamboo:   { zh: '竹子',   zhCN: '竹子',   en: 'Bamboo',   es: 'Bambú'    },
 };
 
-export default function PlantCharacter({ progressPercent = 0, language = 'zh', width = 120, variant = 'oak' }) {
+export default function PlantCharacter({ progressPercent = 0, language = 'zh', width = 120, variant = 'oak', hideLevelBadge = false }) {
   const height   = Math.round(width * (155 / 120));
   const idx      = getStageIndex(progressPercent);
   const stages   = VARIANT_STAGES[variant] ?? OAK_STAGES;
   const PlantSVG = stages[idx];
-  const label    = STAGES[idx].label[language] ?? STAGES[idx].label.en;
+  const level = idx + 1;
 
   return (
     <div key={`${variant}-${idx}`} className="plant-character flex flex-col items-center select-none">
       <svg viewBox="0 0 120 155" width={width} height={height} aria-hidden="true" style={{ overflow: 'visible' }}>
         <PlantSVG />
       </svg>
-      {width >= 90 && (
+      {!hideLevelBadge && width >= 90 && (
         <span
-          className="mt-1 rounded-full border px-3 py-0.5 text-[11px] font-semibold"
+          className="mt-1 rounded-full border px-3 py-0.5 text-[11px] font-semibold tabular-nums"
           style={{ background: 'rgba(90,191,110,0.14)', borderColor: 'rgba(90,191,110,0.32)', color: '#2d8a42' }}
         >
-          {label}
+          Lv.{level}
         </span>
       )}
     </div>
